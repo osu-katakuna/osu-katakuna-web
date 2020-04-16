@@ -24,6 +24,7 @@ Route::get('/register', function () {
 Route::post('/register', "RegistrationController@registerUser");
 
 Route::get('/web/osu-search.php', "BeatmapController@search");
+Route::get('/web/osu-search-set.php', "BeatmapController@set_search");
 Route::get('/d/{id}', "BeatmapController@download");
 Route::get('/thumb/{id}l.jpg', "BeatmapController@thumbnail_large");
 Route::get('/thumb/{id}.jpg', "BeatmapController@thumbnail");

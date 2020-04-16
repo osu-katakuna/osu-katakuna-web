@@ -84,6 +84,27 @@ class BeatmapController extends Controller
       }
     }
 
+    function set_search(Request $req) {
+      if (isset($_GET['b']) && !empty($_GET['b'])) {
+        $maps = json_decode(file_get_contents("http://bloodcat.com/osu/?mod=json&c=s&q=" . $req->get("b")));
+        if(count($maps) >= 40) {
+          echo 101;
+        } else {
+          echo count($maps);
+        }
+        echo "\r\n";
+
+        foreach($maps as $map) {
+          $diffs = "";
+          foreach ($map->beatmaps as $diff) {
+      			$diffs .= "$diff->name@$diff->name,";
+      		}
+      		$diffs = rtrim($diffs, ',');
+          echo "$map->id.osz|$map->artist|$map->title|$map->creator|$map->status|10.00000|$map->synced|$map->id|" . $map->beatmaps[0]->id . "|0|0|0||$diffs|\r\n";
+        }
+    	}
+    }
+
     function download(Request $req, $id) {
        return file_get_contents("https://bloodcat.com/osu/s/$id");
         $b = Beatmap::find($id);
