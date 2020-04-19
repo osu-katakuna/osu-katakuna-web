@@ -25,6 +25,7 @@ class CreateBeatmapsTable extends Migration
             $table->string("creator");
             $table->longText("tags");
             $table->string("source");
+            $table->string("filename")->nullable();
             $table->bigInteger("genre_id")->unsigned();
             $table->timestamps();
         });

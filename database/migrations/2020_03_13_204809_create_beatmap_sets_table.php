@@ -30,6 +30,7 @@ class CreateBeatmapSetsTable extends Migration
             $table->string("author");
             $table->float("aim");
             $table->float("speed");
+            $table->string("filename")->nullable();
 
             $table->foreign("beatmap_id")->references("id")->on("beatmaps");
         });

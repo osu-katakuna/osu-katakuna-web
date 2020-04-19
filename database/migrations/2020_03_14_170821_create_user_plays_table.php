@@ -28,9 +28,10 @@ class CreateUserPlaysTable extends Migration
             $table->boolean("fc");
             $table->boolean("pass");
             $table->text("archivedLetter");
-            $table->tinyInteger("mods");
+            $table->bigInteger("mods")->unsigned();
             $table->tinyInteger("gameMode");
             $table->integer("state");
+            $table->text("replay_file")->nullable()->default(null);
             $table->timestamps();
 
             $table->foreign("user_id")->references("id")->on("users");

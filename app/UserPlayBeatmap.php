@@ -8,6 +8,7 @@ use OsuConsts;
 class UserPlayBeatmap extends Model
 {
     protected $table = "user_plays";
+    protected $dates = ['created_at', 'updated_at'];
 
     function beatmap_set() {
       return $this->belongsTo("App\BeatmapSet", "beatmapset_id");
@@ -19,18 +20,44 @@ class UserPlayBeatmap extends Model
 
     // Source: https://github.com/ppy/osu-performance/blob/master/src/performance/osu/OsuScore.cpp
 
-    function total_hits() {
-      return $this->count300 + $this->count100 + $this->count50 + $this->miss;
-    }
-
-    function total_successful_hits() {
-      return $this->count300 + $this->count100 + $this->count50;
-    }
-
     function accuracy() {
-      if($this->total_hits() == 0) return 0;
-      $score = ($this->count300 * 300) + ($this->count100 * 100) + ($this->count50 * 50);
-      return max(0.0, min(1.0, $score / ($this->total_hits() * 300)));
+      $accuracy = 0;
+
+      if($this->gameMode == 0) {
+        // standard
+        $totalPoints = $this->count50 * 50 + $this->count100 * 100 + $this->count300 * 300;
+			  $totalHits = $this->count300 + $this->count100 + $this->count50 + $this->miss;
+        if($totalHits == 0) {
+          $accuracy = 1;
+        } else {
+          $accuracy = $totalPoints / ($totalHits * 300);
+        }
+      } else if($this->gameMode == 1) {
+        // taiko
+        $totalPoints = ($this->count100 * 50) + ($this->count300 * 100);
+			  $totalHits = $this->miss + $this->count100 + $this->count300;
+        if($totalHits == 0) {
+          $accuracy = 1;
+        } else {
+          $accuracy = $totalPoints / ($totalHits * 100);
+        }
+      } else if($this->gameMode == 2) {
+        // catch the beat
+        $fruits = $this->count300 + $this->count100 + $this->count50;
+			  $totalFruits = $fruits + $this->miss + $this->countKatu;
+        if($totalFruits == 0) {
+          $accuracy = 1;
+        } else {
+          $accuracy = $fruits / $totalFruits;
+        }
+      } else if($this->gameMode == 3) {
+        // mania
+        $totalPoints = $this->count50 * 50 + $this->count100 * 100 + $this->countKatu * 200 + $this->count300 * 300 + $this->countGeki * 300;
+			  $totalHits = $this->miss + $this->count50 + $this->count100 + $this->count300 + $this->countGeki + $this->countKatu;
+        $accuracy = $totalPoints / ($totalHits * 300);
+      }
+
+      return max(0.0, min(1.0, $accuracy));
     }
 
     function aim() {

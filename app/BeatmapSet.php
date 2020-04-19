@@ -12,4 +12,8 @@ class BeatmapSet extends Model
     function beatmap() {
       return $this->belongsTo("App\Beatmap", "beatmap_id");
     }
+
+    function plays() {
+      return $this->hasMany("App\UserPlayBeatmap", "beatmapset_id");
+    }
 }

@@ -36,6 +36,6 @@ class RegistrationController extends Controller
         $new_user->save();
       }
 
-      return view("register", ["message" => $message]);
+      return view("website.register", ["message" => $message]);
     }
 }

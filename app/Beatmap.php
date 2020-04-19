@@ -10,6 +10,6 @@ class Beatmap extends Model
     public $timestamps = false;
 
     function sets() {
-      return $this->belongsToMany("App/BeatmapSet");
+      return $this->hasMany("App\BeatmapSet", "beatmap_id");
     }
 }

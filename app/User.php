@@ -16,8 +16,60 @@ class User extends Model
       return $this->hasMany("App\UserPlayBeatmap", "user_id");
     }
 
-    function playCount() {
-      return count($this->played_scores);
+    function currentRankingPosition($gameMode = 0) {
+      $users = User::all();
+      $scores = array();
+
+      // 1. get all users total score.
+      foreach($users as $user) {
+        $scores[$user->id] = $user->totalScore($gameMode);
+      }
+
+      // 2. sort the scores.
+      arsort($scores);
+
+      // 3. create user ranking;
+      $ranking = array();
+      foreach($scores as $i => $s) {
+        array_push($ranking, $i);
+      }
+
+      return array_search($this->id, $ranking) + 1;
+    }
+
+    function totalScore($gameMode = 0) {
+      $score = 0;
+
+      foreach($this->played_scores->where("pass", "=", "1") as $s) {
+        if($s->gameMode != $gameMode) continue;
+        $score += $s->score;
+      }
+
+      return $score;
+    }
+
+    function accuracy($gameMode = 0) {
+      $accuracy = 0.0;
+      $scores = $this->played_scores->where("gameMode", "=", $gameMode);
+
+      if(count($scores) > 2) {
+        foreach($scores as $s) {
+          $accuracy += $s->accuracy() * 100;
+        }
+        $accuracy /= count($scores);
+      } else {
+        foreach($scores as $s) {
+          $accuracy += $s->accuracy() * 100;
+        }
+        $accuracy += 70;
+        $accuracy /= count($scores) + 1;
+      }
+
+      return round($accuracy, 2);
+    }
+
+    function playCount($gamemode = 0) {
+      return count($this->played_scores->where("gameMode", "=", $gamemode));
     }
 
     function friends() {
@@ -40,5 +92,9 @@ class User extends Model
 
 
       return $pp;
+    }
+
+    function online() {
+      return count($this->hasMany("App\OsuUserSession", "user_id")->get()) >= 1;
     }
 }
