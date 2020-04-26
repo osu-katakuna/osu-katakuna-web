@@ -21,7 +21,7 @@ class CreateBeatmapsTable extends Migration
             $table->string("artist");
             $table->string("artist_unicode")->nullable();
             $table->integer("status");
-            $table->bigInteger("creator_id")->unsigned();
+            $table->bigInteger("creator_id")->unsigned()->nullable();
             $table->string("creator");
             $table->longText("tags");
             $table->string("source");

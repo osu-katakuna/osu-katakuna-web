@@ -7,16 +7,23 @@ use \App\Beatmap;
 use \App\BeatmapSet;
 use \App\User;
 use \App\UserPlayBeatmap;
+use \App\Osu\Chart;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Process\Process;
 
 class BeatmapController extends Controller
 {
-    public static function DownloadBeatmap($query, $set = false) {
-      $maps = json_decode(file_get_contents("http://bloodcat.com/osu/?mod=json&c=" . ($set ? "s" : "o") . "&s=0,1,2,3&m=0,1,2,3&q=" . urlencode($query) . "&p=1"));
-      if(count($maps) < 1) return false;
+    public static function DownloadBeatmap($query, $set = false, $direct_import = false) {
+      if(!$direct_import) {
+        $maps = json_decode(file_get_contents("http://bloodcat.com/osu/?mod=json&c=" . ($set ? "s" : "o") . "&s=0,1,2,3&m=0,1,2,3&q=" . urlencode($query) . "&p=1"));
+        if(count($maps) < 1) return false;
+      } else {
+        $maps = array($query);
+      }
 
       foreach($maps as $map) {
         $id = $map->id;
@@ -45,7 +52,7 @@ class BeatmapController extends Controller
           $beatmap = Beatmap::find($map->id);
         }
 
-        if(!file_exists(storage_path() . BeatmapController::FileNameClean("/app/beatmaps/$artist - $title ($creator).osz"))) {
+        if(!file_exists(storage_path() . BeatmapController::FileNameClean("/app/beatmaps/$artist - $title ($creator).osz")) && !$direct_import) {
           Storage::put(BeatmapController::FileNameClean("beatmaps/$artist - $title ($creator).osz"), file_get_contents("http://bloodcat.com/osu/s/$id"));
         }
 
@@ -288,13 +295,14 @@ class BeatmapController extends Controller
       $user = User::where([["username", "=", $username], ["password_hash", "=", $_POST["pass"]]])->get()->first();
       $bm = BeatmapSet::where("md5", "=", $scoreDataArray[0])->get()->first();
       if(!$bm) {
-        return "pass";
+        return "error: pass";
       }
 
       if(!$user) {
-        return "pass";
+        return "error: pass";
       }
 
+      $fileChecksum = $scoreDataArray[0];
       $count300 = $scoreDataArray[3];
       $count100 = $scoreDataArray[4];
       $count50 = $scoreDataArray[5];
@@ -308,6 +316,40 @@ class BeatmapController extends Controller
       $mods = $scoreDataArray[13];
       $pass = $scoreDataArray[14] == 'True';
       $gameMode = $scoreDataArray[15];
+      $time = date("ymdHms");
+      $version = $req->get("osuver");
+      $clientHash = "thismustbeusersclienthashfromdb";
+
+      $ch = "chickenmcnuggets" . ($count100 + $count300) . "o15" . $count50 . $countGeki . "smustard" . $countKatu . $miss . "uu" . $fileChecksum . $maxCombo . ($fc ? "True" : "False") . $username . $score . $archivedLetter . $mods . $gameMode . "Q" . $time . $version . $clientHash;
+      //dd($time, $version, $clientHash, $ch, $scoreDataArray);
+
+      $beatmap_ranking = new Chart();
+      $beatmap_ranking->id = "beatmap";
+      $beatmap_ranking->name = "Beatmap Ranking";
+      $beatmap_ranking->url = "https://osu.ppy.sh/b/" . $bm->beatmap->id;
+      $beatmap_ranking->rankBefore = $bm->positionOfUser($user);
+
+      $last_good_play = $bm->plays()->where("user_id", "=", $user->id)->orderBy("maxCombo", "DESC")->get()->first();
+
+      if($last_good_play) {
+        $beatmap_ranking->maxComboBefore = $last_good_play->maxCombo;
+        $beatmap_ranking->accuracyBefore = $last_good_play->accuracy() * 100;
+        $beatmap_ranking->rankedScoreBefore = $last_good_play->score;
+        $beatmap_ranking->totalScoreBefore = $last_good_play->score;
+        $beatmap_ranking->ppBefore = 0;
+      }
+      $beatmap_ranking->ppAfter = 0;
+
+      $overall_ranking = new Chart();
+      $overall_ranking->id = "overall";
+      $overall_ranking->name = "Global Ranking";
+      $overall_ranking->url = "https://osu.ppy.sh/u/" . $user->id;
+      $overall_ranking->rankBefore = $user->currentRankingPosition($gameMode);
+      $overall_ranking->accuracyBefore = $user->accuracy($gameMode);
+      $overall_ranking->rankedScoreBefore = $user->totalScore($gameMode);
+      $overall_ranking->totalScoreBefore = $user->totalScore($gameMode);
+      $overall_ranking->ppBefore = 0;
+      $overall_ranking->ppAfter = 0;
 
       $play = new UserPlayBeatmap();
       $play->player()->associate($user);
@@ -329,6 +371,93 @@ class BeatmapController extends Controller
       $play->replay_file = $replay_file;
       $play->save();
 
-      return "ok";
+      $overall_ranking->rankAfter = $user->currentRankingPosition($gameMode);
+      $overall_ranking->accuracyAfter = $user->accuracy($gameMode);
+      $overall_ranking->rankedScoreAfter = $user->totalScore($gameMode);
+      $overall_ranking->totalScoreAfter = $user->totalScore($gameMode);
+      $overall_ranking->onlineScoreId = $play->id;
+
+      $beatmap_ranking->onlineScoreId = $play->id;
+      $beatmap_ranking->rankAfter = $bm->positionOfUser($user);
+      $beatmap_ranking->totalScoreAfter = $play->score;
+      $beatmap_ranking->rankedScoreAfter = $play->score;
+      $beatmap_ranking->accuracyAfter = $play->accuracy() * 100;
+      $beatmap_ranking->maxComboAfter = $play->maxCombo;
+
+      return "beatmapId:" .
+        $bm->beatmap->id .
+        "|beatmapSetId:" .
+        $bm->id .
+        "|beatmapPlaycount:" .
+        count($user->played_scores()->where("beatmapset_id", "=", $bm->id)->get()) .
+        "|beatmapPasscount:" .
+        count($user->played_scores()->where([["beatmapset_id", "=", $bm->id], ["pass", "=", "1"]])->get()) .
+        "|approvedDate:" .
+        ($bm->beatmap->created_at != NULL ? $bm->beatmap->created_at : "") .
+        "\n\n" .
+        $beatmap_ranking->ToString().
+        "\n" .
+        $overall_ranking->ToString();
+    }
+
+    public static function UploadedBeatmapRegister($path) {
+      $map_data = array();
+      $map_data["beatmaps"] = array();
+      $_beatmap = new \ZipArchive();
+
+      $_beatmap->open($path);
+      for ($i = 0; $i < $_beatmap->numFiles; $i++) {
+          $file = $_beatmap->statIndex($i);
+          if(substr($file['name'], strlen($file['name']) - 4, 4) == ".osu") {
+              Storage::put(BeatmapController::FileNameClean("beatmaps/" . $file['name']),  $_beatmap->getFromIndex($i));
+              $process = new Process(["node", "/katakuna/beatmap-calculator", BeatmapController::FileNameClean(storage_path() . "/app/beatmaps/" . $file['name'])]);
+              $process->run();
+              $output = $process->getOutput();
+              if(!$process->isSuccessful()) {
+                return redirect('/add-beatmap')
+                            ->withErrors(["Failed to import " . BeatmapController::FileNameClean(storage_path() . "/app/beatmaps/" . $file['name'])]);
+              } else {
+                $map_set = (object) json_decode(join("", explode("\n", $output)));
+                array_push($map_data["beatmaps"], $map_set);
+                $map_data["synced"] = date("Y-m-d H:m:s");
+                $map_data["status"] = 2;
+                $map_data["title"] = $map_set->title;
+                $map_data["titleU"] = "";
+                $map_data["artist"] = $map_set->artist;
+                $map_data["artistU"] = "";
+                $map_data["creatorId"] = NULL;
+                $map_data["creator"] = $map_set->creator;
+                $map_data["rankedAt"] = null;
+                $map_data["tags"] = "";
+                $map_data["source"] = "";
+                $map_data["genreId"] = "1";
+                $map_data["id"] = BeatmapController::GetOsuBMMetadata($_beatmap->getFromIndex($i), "BeatmapSetID");
+              }
+          }
+      }
+
+      Storage::put(BeatmapController::FileNameClean("beatmaps/" . $map_data["artist"] . " - " . $map_data["title"] . " (" . $map_data["creator"] . ").osz"), file_get_contents($path));
+      BeatmapController::DownloadBeatmap((object)$map_data, false, true);
+    }
+
+    function registerUploadedBeatmap(Request $req) {
+      if(!file_exists("/katakuna/beatmap-calculator/index.js")) {
+        return redirect('/add-beatmap')
+                    ->withErrors(["Katakuna Beatmap Calculator is not installed! Cannot continue."]);
+      }
+
+      $validator = Validator::make($req->all(), [
+          'BeatmapFile' => 'required|file'
+      ]);
+
+      if ($validator->fails()) {
+        return redirect('/add-beatmap')
+                    ->withErrors($validator);
+      }
+
+      $beatmap = $req->file("BeatmapFile");
+      BeatmapController::UploadedBeatmapRegister($beatmap->path());
+
+      return view("website.beatmap-add", ["message" => "Beatmap registered successfully!"]);
     }
 }
