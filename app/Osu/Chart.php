@@ -25,6 +25,15 @@ class Chart {
     array_push($this->achievements, $achv);
   }
 
+  private function GetAchievementString() {
+    $str = "";
+    foreach($this->achievements as $a) {
+      $str .= $a["Icon"] . "+" . $a["DisplayName"] . "+" . $a["Description"] . "/";
+    }
+
+    return substr($str, 0, strlen($str) - 1);
+  }
+
   public function ToString() {
     return "chartId:" . $this->id .
        "|chartUrl:" . $this->url .
@@ -41,7 +50,7 @@ class Chart {
        "|totalScoreAfter:" . $this->totalScoreAfter .
        "|ppBefore:" . $this->ppBefore .
        "|ppAfter:" . $this->ppAfter .
-       (count($this->achievements) < 1 ? "" : "|achievements-new:" . $this->achievements) .
+       (count($this->achievements) < 1 ? "" : "|achievements-new:" . $this->GetAchievementString()) .
        "|onlineScoreId:" . $this->onlineScoreId;
   }
 

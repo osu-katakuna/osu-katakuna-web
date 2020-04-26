@@ -351,6 +351,16 @@ class BeatmapController extends Controller
       $overall_ranking->ppBefore = 0;
       $overall_ranking->ppAfter = 0;
 
+      // this is how you do an achievement :D
+
+      // $achv = [
+      //     "Icon" => "osu-combo-2000",
+      //     "DisplayName" => "YEE",
+      //     "Description" => "YEE BOII U SMAERT!"
+      // ];
+      //
+      // $overall_ranking->addAchievement($achv);
+
       $play = new UserPlayBeatmap();
       $play->player()->associate($user);
       $play->beatmap_set()->associate($bm);
