@@ -48,3 +48,5 @@ Route::get('/preview/{id}.mp3', "BeatmapController@song_preview");
 
 Route::post('/web/osu-submit-modular-selector.php', "BeatmapController@submit_score");
 Route::get('/web/osu-osz2-getscores.php', "ScoreController@get_score");
+
+Route::post('/users', 'RegistrationController@osuRegisterUser');
