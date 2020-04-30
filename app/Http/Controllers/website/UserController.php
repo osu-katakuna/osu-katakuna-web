@@ -9,7 +9,7 @@ use App\User;
 class UserController extends Controller
 {
     function userProfile(Request $req, $id) {
-      if(!User::find($id)) return view("website.notFound");
+      if(!User::find($id)) return view("website.user-not-found");
 
       return view("website.profile", [
         "user" => User::find($id)

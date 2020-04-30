@@ -19,7 +19,7 @@
         </ul>
       </div>
       @endif
-      <form action="/register" method="post">
+      <form action="{{ route("register") }}" method="post">
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" class="form-control" name="username" value="{{ old('username') }}">

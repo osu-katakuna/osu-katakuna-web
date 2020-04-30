@@ -20,7 +20,7 @@
           </ul>
         </div>
         @endif
-        <form action="/add-beatmap" method="post" enctype="multipart/form-data">
+        <form action="{{ route("add-beatmap") }}" method="post" enctype="multipart/form-data">
           <div class="form-group">
             <label for="bm">Beatmap archive(*.osz):</label>
             <input type="file" class="form-control-file" name="BeatmapFile" id="bm">

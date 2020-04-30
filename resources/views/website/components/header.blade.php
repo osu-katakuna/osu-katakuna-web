@@ -7,11 +7,11 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="/">Home
+          <a class="nav-link" href="{{ route("/") }}">Home
             <span class="sr-only">(current)</span>
           </a>
         </li>
-        <a class="nav-link" href="/register">Register</a>
+        <a class="nav-link" href="{{ route("register") }}">Register</a>
       </ul>
     </div>
   </div>

@@ -97,8 +97,8 @@
       <br><br>
       <div class="links">
         <a href="https://talnaci-alexandru.ro">Developer's website</a>
-        <a href="#">Download switcher</a>
-        <a href="/register">Register</a>
+        <a href="/static/switcher/KatakunaSwitcher.exe">Download switcher</a>
+        <a href="{{ route("register") }}">Register</a>
       </div>
     </div>
   </div>

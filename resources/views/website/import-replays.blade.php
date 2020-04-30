@@ -19,7 +19,7 @@
         </ul>
       </div>
       @endif
-      <form action="/import-replays" method="post" enctype="multipart/form-data">
+      <form action="{{ route("import-replays") }}" method="post" enctype="multipart/form-data">
         <div class="form-group">
           <label for="rp">Replays(select multiple files):</label>
           <input type="file" class="form-control-file" name="ReplayFile[]" id="rp" multiple="multiple">

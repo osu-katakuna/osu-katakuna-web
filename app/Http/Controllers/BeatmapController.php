@@ -225,7 +225,7 @@ class BeatmapController extends Controller
 
     public static function StreamBeatmapFromStorage($f) {
       $path = storage_path() . "/app/" . $f;
-      if(!file_exists($path)) throw new Exception("File $path not found!");
+      if(!file_exists($path)) throw new \Exception("File $path not found!");
 
       return response()->file($path);
     }
@@ -233,6 +233,15 @@ class BeatmapController extends Controller
     function download(Request $req, $id) {
         $b = Beatmap::find($id);
         if($b) {
+          if(!file_exists(storage_path() . "/app/" . $b->filename)) {
+            BeatmapController::DownloadBeatmap($id, true);
+            $b = Beatmap::find($id);
+            if($b) {
+              return BeatmapController::StreamBeatmapFromStorage($b->filename);
+            } else {
+              return "";
+            }
+          }
           return BeatmapController::StreamBeatmapFromStorage($b->filename);
         } else {
           BeatmapController::DownloadBeatmap($id, true);

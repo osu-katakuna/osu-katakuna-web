@@ -57,7 +57,7 @@ class User extends Model
           $accuracy += $s->accuracy() * 100;
         }
         $accuracy /= count($scores);
-      } else {
+      } else if(count($scores) == 1) {
         foreach($scores as $s) {
           $accuracy += $s->accuracy() * 100;
         }
@@ -86,7 +86,7 @@ class User extends Model
       return 0;
     }
 
-    function pp() {
+    function pp($gameMode = 0) {
       $pp = 0;
       $maps = $this->played_scores;
 
@@ -96,5 +96,13 @@ class User extends Model
 
     function online() {
       return count($this->hasMany("App\OsuUserSession", "user_id")->get()) >= 1;
+    }
+
+    function stats() {
+      return $this->hasMany('App\UserStats', 'user_id');
+    }
+
+    function currentStats($gamemode = 0) {
+      return $this->stats()->where('gameMode', '=', $gamemode)->orderBy('created_at', 'DESC')->get()->first();
     }
 }
