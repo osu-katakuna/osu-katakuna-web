@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Model
 {
+    use SoftDeletes;
+
     protected $table = "users";
 
     protected $hidden = [
@@ -76,6 +79,10 @@ class User extends Model
       return $this->belongsToMany("App\User", "user_friendships", "user", "friend");
     }
 
+    function messages() {
+      return $this->hasMany("App\PrivateMessage", "to_user_id");
+    }
+
     function mutualFriendsWith($id) {
       if(count($this->friends) < 1) return 0;
       foreach($this->friends as $friend) {
@@ -95,7 +102,11 @@ class User extends Model
     }
 
     function online() {
-      return count($this->hasMany("App\OsuUserSession", "user_id")->get()) >= 1;
+      return count($this->sessions) >= 1;
+    }
+
+    function sessions() {
+      return $this->hasMany("App\OsuUserSession", "user_id");
     }
 
     function stats() {

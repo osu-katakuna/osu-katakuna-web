@@ -42,3 +42,7 @@ Route::post('/web/osu-submit-modular-selector.php', "BeatmapController@submit_sc
 Route::get('/web/osu-osz2-getscores.php', "ScoreController@get_score");
 
 Route::post('/users', 'RegistrationController@osuRegisterUser');
+
+// Route::get('/ban/user/{id}', "UserController@banUser");
+// Route::get('/unban/user/{id}', "UserController@unbanUser");
+// Route::get('/delete/user/{id}', "UserController@deleteUser");

@@ -43,6 +43,7 @@ class ScoreController extends Controller
         $add = true;
 
         foreach($plays as $i => $play) {
+          if($play->player == NULL) continue;
           if($play->player->id == $p->player->id) {
             if($p->score > $play->score) {
               $plays[$i] = $p;
@@ -66,6 +67,7 @@ class ScoreController extends Controller
 
       $i = 1;
       foreach($plays as $play) {
+        if($play->player == NULL) continue;
         $replayID = $play->id;
         $userID = $play->player->id;
       	$playerName = $play->player->username;

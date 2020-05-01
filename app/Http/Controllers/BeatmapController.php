@@ -32,7 +32,7 @@ class BeatmapController extends Controller
         $creator = $map->creator;
 
         $beatmap = new Beatmap();
-        $beatmap->id = $map->id;
+        if($map->id != -1) $beatmap->id = $map->id;
         $beatmap->sync_date = $map->synced;
         $beatmap->title = $map->title;
         $beatmap->title_unicode = $map->titleU;

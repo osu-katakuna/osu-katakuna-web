@@ -19,6 +19,10 @@ class CreateUsersTable extends Migration
 			      $table->string("email");
             $table->string("avatar")->nullable();
 			      $table->string("password_hash");
+            $table->boolean("bot")->default(false);
+            $table->boolean("banned")->default(false);
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }
