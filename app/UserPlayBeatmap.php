@@ -23,7 +23,7 @@ class UserPlayBeatmap extends Model
     function accuracy() {
       $accuracy = 0;
 
-      if($this->gameMode == 0) {
+      if($this->gameMode == 0 || $this->gameMode == 4) {
         // standard
         $totalPoints = $this->count50 * 50 + $this->count100 * 100 + $this->count300 * 300;
 			  $totalHits = $this->count300 + $this->count100 + $this->count50 + $this->miss;

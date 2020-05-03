@@ -23,6 +23,10 @@ Route::post('/add-beatmap', "BeatmapController@registerUploadedBeatmap")->name('
 Route::get('/import-replays', 'website\WebsiteController@importReplays')->name('import-replays');
 Route::post('/import-replays', "ReplayController@importReplays")->name('import-replays');
 
+Route::get('/leaderboard', function() {
+  return view('website.leaderboard');
+})->name("leaderboard");
+
 Route::get('/query-server-ip', "IPController@getIP");
 
 Route::get('/web/osu-search.php', "BeatmapController@search");
@@ -37,6 +41,8 @@ Route::get('/users/{id}', "website\UserController@userProfile");
 Route::get('/thumb/{id}l.jpg', "BeatmapController@thumbnail_large");
 Route::get('/thumb/{id}.jpg', "BeatmapController@thumbnail");
 Route::get('/preview/{id}.mp3', "BeatmapController@song_preview");
+
+Route::get('/get/replay/{id}', "ReplayController@getFull");
 
 Route::post('/web/osu-submit-modular-selector.php', "BeatmapController@submit_score");
 Route::get('/web/osu-osz2-getscores.php', "ScoreController@get_score");

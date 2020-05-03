@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \App\Beatmap;
-use \App\BeatmapSet;
-use \App\User;
-use \App\UserPlayBeatmap;
-use \App\Osu\Chart;
+use App\Beatmap;
+use App\BeatmapSet;
+use App\User;
+use App\UserPlayBeatmap;
+use App\Osu\Chart;
+use App\OsuConsts;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -304,11 +305,11 @@ class BeatmapController extends Controller
       $user = User::where([["username", "=", $username], ["password_hash", "=", $_POST["pass"]]])->get()->first();
       $bm = BeatmapSet::where("md5", "=", $scoreDataArray[0])->get()->first();
       if(!$bm) {
-        return "error: pass";
+        return "error: beatmap";
       }
 
       if(!$user) {
-        return "error: pass";
+        return "error: beatmap";
       }
 
       $fileChecksum = $scoreDataArray[0];
@@ -324,7 +325,7 @@ class BeatmapController extends Controller
       $archivedLetter = $scoreDataArray[12];
       $mods = $scoreDataArray[13];
       $pass = $scoreDataArray[14] == 'True';
-      $gameMode = $scoreDataArray[15];
+      $gameMode = ($mods & OsuConsts::Relax) ? 4 : $scoreDataArray[15];
       $time = date("ymdHms");
       $version = $req->get("osuver");
       $clientHash = "thismustbeusersclienthashfromdb";
@@ -402,6 +403,8 @@ class BeatmapController extends Controller
       $beatmap_ranking->rankedScoreAfter = $play->score;
       $beatmap_ranking->accuracyAfter = $play->accuracy() * 100;
       $beatmap_ranking->maxComboAfter = $play->maxCombo;
+
+      \Artisan::call('schedule:run');
 
       return "beatmapId:" .
         $bm->beatmap->id .

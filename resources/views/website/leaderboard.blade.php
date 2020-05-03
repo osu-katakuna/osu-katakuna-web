@@ -1,0 +1,16 @@
+@extends("website.components.page")
+
+@section("title", "leaderboard | osu!katakuna")
+
+@section("content")
+<div class="jumbotron">
+  <div class="card">
+    <div class="card-body">
+      <div class="container">
+        <h1>leaderboard</h1>
+        <leaderboard/>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection

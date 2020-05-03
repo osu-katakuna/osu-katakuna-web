@@ -23,6 +23,50 @@ class ReplayController extends Controller
       }
     }
 
+    function getFull(Request $req, $id) {
+      $replay = UserPlayBeatmap::find($id);
+
+      if($replay && $replay->replay_file != NULL) {
+        if(!$replay->beatmap_set) return "Beatmap does not exist!";
+        $replay_raw = file_get_contents(storage_path() . '/app/replays/' . $replay->replay_file);
+        $fullCombo = $replay->fc == 1 ? 'True' : 'False';
+        $ticks = $replay->created_at->timestamp * 10000000 + 621355968000000000;
+
+        $magicString = md5(sprintf('%dp%do%do%dt%da%dr%de%sy%do%du%s%d%s', $replay->count100 + $replay->count300, $replay->count50, $replay->countGeki, $replay->countKatu, $replay->miss, $replay->beatmap_set->md5, $replay->maxCombo, $fullCombo, $replay->player->username, $replay->score, $replay->archivedLetter, $replay->mods, 'True'));
+      	// Build full replay
+      	$output = '';
+      	$output .= pack('C', $replay->gameMode);
+      	$output .= pack('I', 20200427);
+      	$output .= OsuUtils::StringBinary($replay->beatmap_set->md5);
+      	$output .= OsuUtils::StringBinary($replay->player->username);
+      	$output .= OsuUtils::StringBinary($magicString);
+      	$output .= pack('S', $replay->count300);
+      	$output .= pack('S', $replay->count100);
+      	$output .= pack('S', $replay->count50);
+      	$output .= pack('S', $replay->countGeki);
+      	$output .= pack('S', $replay->countKatu);
+      	$output .= pack('S', $replay->miss);
+      	$output .= pack('I', $replay->score);
+      	$output .= pack('S', $replay->maxCombo);
+      	$output .= pack('C', $replay->fc);
+      	$output .= pack('I', $replay->mods);
+      	$output .= OsuUtils::StringBinary(""); // Life bar graph, empty
+      	$output .= pack('q', $ticks); // Time, not implemented (yet)
+      	$output .= pack('I', strlen($replay_raw));
+      	$output .= $replay_raw;
+      	$output .= pack('I', 0);
+      	$output .= pack('I', 0);
+
+        $replay_file_name = $replay->player->username . " - " . $replay->beatmap_set->beatmap->title . "(" . $replay->beatmap_set->beatmap->creator . ") [" . $replay->beatmap_set->name . "].osr";
+
+        $headers = array('Content-Type' => "application/octet-stream", 'Content-Disposition' => 'attachment; filename="' . $replay_file_name . '"');
+
+        return \Response::make($output, 200, $headers);;
+      }
+
+      return "Replay does not exist!";
+    }
+
     function importReplays(Request $req) {
       $errors = array();
 
@@ -138,4 +182,6 @@ class ReplayController extends Controller
 
       return view("website.import-replays", ["message" => "Score(s) imported successfully!"]);
     }
+
+
 }

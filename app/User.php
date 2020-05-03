@@ -20,7 +20,7 @@ class User extends Model
     }
 
     function currentRankingPosition($gameMode = 0) {
-      $users = User::all();
+      $users = User::where("bot", "=", "0")->get();
       $scores = array();
 
       // 1. get all users total score.
