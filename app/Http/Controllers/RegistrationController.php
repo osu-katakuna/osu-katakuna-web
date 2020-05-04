@@ -12,10 +12,15 @@ class RegistrationController extends Controller
       $message = "User registered successfully!";
 
       $validator = Validator::make($req->all(), [
-          'username' => 'required|unique:users,username|max:255',
+          'username' => 'required|unique:users,username|max:20',
           'email' => 'required|email',
           'password' => 'required|max:255'
       ]);
+
+      if(strlen($req->get("username")) != strlen(utf8_decode($req->get("username")))) {
+        $message = "Invalid username!";
+        return view("website.register")->withErrors($message);
+      }
 
       if ($validator->fails()) {
         return redirect('/register')
@@ -26,6 +31,7 @@ class RegistrationController extends Controller
       $u = User::where("username", "=", $req->get("username"))->get();
       if(count($u) > 0) {
         $message = "The selected username is invalid!";
+        return view("website.register")->withErrors($message);
       } else {
         $new_user = new User();
 
@@ -41,11 +47,22 @@ class RegistrationController extends Controller
 
     function osuRegisterUser(Request $req) {
       $validator = Validator::make($req->all(), [
-          'user.username' => 'required|unique:users,username|max:255',
+          'user.username' => 'required|unique:users,username|max:20',
           'user.user_email' => 'required|email|unique:users,email',
           'user.password' => 'required|max:255',
           'check' => 'required|boolean'
       ]);
+
+      if(strlen($req->get("username")) != strlen(utf8_decode($req->get("username")))) {
+        $message = "Invalid username!";
+
+        $errors = array();
+        $errors["form_error"] = array();
+        $errors["form_error"]["user"] = array();
+        $errors["form_error"]["user"]["username"] = array($message);
+
+        return response()->json($errors, 422);
+      }
 
       if ($validator->fails()) {
         $errors = array();
