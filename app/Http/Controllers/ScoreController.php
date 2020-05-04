@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Beatmap;
 use App\BeatmapSet;
+use App\User;
 use App\Http\Controllers\BeatmapController;
 
 class ScoreController extends Controller
@@ -35,8 +36,10 @@ class ScoreController extends Controller
         return;
       }
 
+      $player = User::where("username", "=", $req->get("us"))->get()->first();
+      $player_id = $player ? $player->id : 0;
+
       $ranked_status = 2;
-      $bid = $beatmap->id;
       $plays = [];
 
       foreach($beatmap->plays()->where("pass", "=", "1")->orderBy('score', 'desc')->get() as $p) {
@@ -63,10 +66,41 @@ class ScoreController extends Controller
 
       $tots = $ranked_status == 2 ? count($plays) : 0;
 
-      echo $ranked_status . '|false|'.$bid.'|'.$bid.'|'.$tots."\n";
+      echo $ranked_status . '|false|'.$beatmap->beatmap->id.'|'.$beatmap->id.'|'.$tots."\n";
       echo "0\n";
-      echo explode(".osu", $_GET["f"])[0] . "\n";
-      echo "0.0\n\n";
+      echo "[bold:0,size:20]小倉唯|Baby Sweet Berry Love\n";
+      echo "1.0\n";
+
+      $play = $player->played_scores()->where("beatmapset_id", "=", $beatmap->id)->orderBy("score", "DESC")->get()->first();
+      if($play) {
+        $replayID = $play->id;
+        $userID = $play->player->id;
+      	$playerName = $play->player->username;
+      	$score = $play->score;
+      	$maxCombo = $play->maxCombo;
+      	$count50 = $play->count50;
+      	$count100 = $play->count100;
+      	$count300 = $play->count300;
+      	$countMisses = $play->miss;
+      	$countKatu = $play->countKatu;
+      	$countGeki = $play->countGeki;
+      	$fullCombo = $play->fc;
+      	$mods = $play->mods;
+
+        $rank = 1;
+        foreach($plays as $play) {
+          if($play->player != NULL && $play->player->id == $player->id) break;
+          $rank++;
+        }
+
+        $hasReplay = $play->replay_file != null ? 1 : 0;
+
+        $actualDate = $play->created_at->timestamp;
+
+        echo $replayID.'|'.$playerName.'|'.$score.'|'.$maxCombo.'|'.$count50.'|'.$count100.'|'.$count300.'|'.$countMisses.'|'.$countKatu.'|'.$countGeki.'|'.$fullCombo.'|'.$mods.'|'.$userID.'|'. $rank . '|' . $actualDate . '|' . $hasReplay . "\n";
+      } else {
+        echo "\n";
+      }
 
       $i = 1;
       foreach($plays as $play) {
