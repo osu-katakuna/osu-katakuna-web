@@ -42,8 +42,11 @@ class ScoreController extends Controller
       foreach($beatmap->plays()->where("pass", "=", "1")->orderBy('score', 'desc')->get() as $p) {
         $add = true;
 
+        if($p->player == NULL) continue;
+
         foreach($plays as $i => $play) {
           if($play->player == NULL) continue;
+
           if($play->player->id == $p->player->id) {
             if($p->score > $play->score) {
               $plays[$i] = $p;

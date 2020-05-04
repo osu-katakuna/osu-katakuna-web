@@ -4,28 +4,7 @@
 
 @section("content")
 <div class="jumbotron">
-  <div class="card">
-    <div class="card-body">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-2">
-            <img src="{{ env("AVATAR_SERVER") . "/" . $user->id }}" alt="avatar" class="rounded float-left">
-          </div>
-          <div class="col-sm">
-            <div class="container">
-              <h1>
-                {{$user->username}}
-              </h1>
-              <div id="socialstatus" class="subtitle">
-                <i class="status-dot{{$user->online() ? " online" : "" }}"></i>
-                <span>{{$user->online() ? "Online" : "Offline" }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <user-card :user_id="{{ $user->id }}" />
   <div class="card">
     <div class="card-body">
       <div class="container">
