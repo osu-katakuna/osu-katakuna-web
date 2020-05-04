@@ -66,9 +66,9 @@ class ScoreController extends Controller
 
       $tots = $ranked_status == 2 ? count($plays) : 0;
 
-      echo $ranked_status . '|false|'.$beatmap->beatmap->id.'|'.$beatmap->id.'|'.$tots."\n";
+      echo $ranked_status . '|false|' . $beatmap->beatmap->id . '|' . $beatmap->id . '|' . $tots . "\n";
       echo "0\n";
-      echo "[bold:0,size:20]小倉唯|Baby Sweet Berry Love\n";
+      echo "[bold:0,size:20]" . explode(".osu", $_GET["f"])[0] . "\n";
       echo "1.0\n";
 
       $play = $player->played_scores()->where("beatmapset_id", "=", $beatmap->id)->orderBy("score", "DESC")->get()->first();
