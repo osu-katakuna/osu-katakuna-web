@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-show="error" class="alert alert-danger" role="alert">
+  <div v-if="error" class="alert alert-danger" role="alert">
     An unknown error has occured while getting the leaderboard from our server. If you believe this is a bug, then submit an issue here: <a href="https://github.com/osu-katakuna/osu-katakuna-web/issues/new" class="alert-link">GitHub</a>
   </div>
   <nav aria-label="Gamemodes">
@@ -11,8 +11,8 @@
     </ul>
   </nav>
   <br>
-  <span v-show="loading">Loading...</span>
-  <div v-show="!loading" id="leaderboard">
+  <span v-if="loading">Loading...</span>
+  <div v-if="!loading" id="leaderboard">
     <table class="table">
       <thead class="thead-light">
         <tr>
@@ -27,7 +27,7 @@
       <tbody>
         <tr v-for="user in pageElements" :key="user.id">
           <th scope="row">#{{ user.rank }}</th>
-          <td>{{ user.username }}</td>
+          <td><a href="#" @click="() => showUserModal(user.id)">{{ user.username }}</a></td>
           <td>{{ Number(user.pp).toLocaleString() }}</td>
           <td>{{ Number(user.score).toLocaleString() }}</td>
           <td>{{ user.accuracy }}%</td>
@@ -53,6 +53,23 @@
       </ul>
     </nav>
   </div>
+  <div class="modal fade" id="user_preview_modal" tabindex="-1" role="dialog" aria-labelledby="user_preview_modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" v-if="showUser">
+          <user-card :user_id="userID" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="() => RedirectToUserProfile(userID)">Open user profile</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -67,13 +84,29 @@ export default {
     maxElementsPerPage: 50,
     maxPagesShown: 5,
     updateTime: 15, // Will update content every specified second
-    gamemodes: [
-      {name: "osu!standard", mode: "standard"},
-      {name: "osu!taiko", mode: "taiko"},
-      {name: "osu!mania", mode: "mania"},
-      {name: "osu!ctb", mode: "ctb"},
-      {name: "osu!standard(Relax)", mode: "relax"}
-    ]
+    gamemodes: [{
+        name: "osu!standard",
+        mode: "standard"
+      },
+      {
+        name: "osu!taiko",
+        mode: "taiko"
+      },
+      {
+        name: "osu!mania",
+        mode: "mania"
+      },
+      {
+        name: "osu!ctb",
+        mode: "ctb"
+      },
+      {
+        name: "osu!standard(Relax)",
+        mode: "relax"
+      }
+    ],
+    showUser: false,
+    userID: 0
   }),
   created() {
     this.getAllGamemodes(true);
@@ -98,7 +131,7 @@ export default {
     },
     updateGamemodes: function() {
       this.getAllGamemodes(false).then(() => {
-        if(!this.error)
+        if (!this.error)
           setTimeout(this.updateGamemodes, this.updateTime * 1000);
       });
     },
@@ -116,6 +149,17 @@ export default {
     changeGamemode: function(gm) {
       this.gamemode = gm;
       this.currentPage = 1;
+    },
+    showUserModal: function(uid) {
+      this.userID = uid;
+      this.showUser = true;
+      $('#user_preview_modal').modal();
+      $('#user_preview_modal').on('hidden.bs.modal', () => {
+        this.showUser = false;
+      });
+    },
+    RedirectToUserProfile: function(uid) {
+      window.location.href = "/u/" + uid;
     }
   },
   computed: {

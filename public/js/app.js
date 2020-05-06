@@ -1966,6 +1966,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1993,7 +2010,9 @@ __webpack_require__.r(__webpack_exports__);
       }, {
         name: "osu!standard(Relax)",
         mode: "relax"
-      }]
+      }],
+      showUser: false,
+      userID: 0
     };
   },
   created: function created() {
@@ -2037,6 +2056,19 @@ __webpack_require__.r(__webpack_exports__);
     changeGamemode: function changeGamemode(gm) {
       this.gamemode = gm;
       this.currentPage = 1;
+    },
+    showUserModal: function showUserModal(uid) {
+      var _this3 = this;
+
+      this.userID = uid;
+      this.showUser = true;
+      $('#user_preview_modal').modal();
+      $('#user_preview_modal').on('hidden.bs.modal', function () {
+        _this3.showUser = false;
+      });
+    },
+    RedirectToUserProfile: function RedirectToUserProfile(uid) {
+      window.location.href = "/u/" + uid;
     }
   },
   computed: {
@@ -2133,12 +2165,12 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    this.$socket.onopen = function () {
-      _this.$socket.sendObj({
-        "action": "listen-user-status",
-        "user-id": _this.user_id
-      });
-    };
+    this.$socket.onopen = this.onOpen;
+    console.log(this.$socket.readyState, this.$socket);
+
+    if (this.$socket.readyState == 1) {
+      this.onOpen();
+    }
 
     this.$socket.onmessage = function (message) {
       message = JSON.parse(message.data);
@@ -2158,7 +2190,20 @@ __webpack_require__.r(__webpack_exports__);
 
     this.$socket.onerror = function () {
       _this.error = true;
+
+      if (_this.$socket.readyState == 3) {
+        _this.$socket.connect();
+      }
     };
+  },
+  methods: {
+    onOpen: function onOpen() {
+      this.error = false;
+      this.$socket.sendObj({
+        "action": "listen-user-status",
+        "user-id": this.user_id
+      });
+    }
   }
 });
 
@@ -37809,37 +37854,28 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.error,
-            expression: "error"
-          }
-        ],
-        staticClass: "alert alert-danger",
-        attrs: { role: "alert" }
-      },
-      [
-        _vm._v(
-          "\n    An unknown error has occured while getting the leaderboard from our server. If you believe this is a bug, then submit an issue here: "
-        ),
-        _c(
-          "a",
-          {
-            staticClass: "alert-link",
-            attrs: {
-              href:
-                "https://github.com/osu-katakuna/osu-katakuna-web/issues/new"
-            }
-          },
-          [_vm._v("GitHub")]
+    _vm.error
+      ? _c(
+          "div",
+          { staticClass: "alert alert-danger", attrs: { role: "alert" } },
+          [
+            _vm._v(
+              "\n    An unknown error has occured while getting the leaderboard from our server. If you believe this is a bug, then submit an issue here: "
+            ),
+            _c(
+              "a",
+              {
+                staticClass: "alert-link",
+                attrs: {
+                  href:
+                    "https://github.com/osu-katakuna/osu-katakuna-web/issues/new"
+                }
+              },
+              [_vm._v("GitHub")]
+            )
+          ]
         )
-      ]
-    ),
+      : _vm._e(),
     _vm._v(" "),
     _c("nav", { attrs: { "aria-label": "Gamemodes" } }, [
       _c(
@@ -37883,134 +37919,179 @@ var render = function() {
     _vm._v(" "),
     _c("br"),
     _vm._v(" "),
-    _c(
-      "span",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.loading,
-            expression: "loading"
-          }
-        ]
-      },
-      [_vm._v("Loading...")]
-    ),
+    _vm.loading ? _c("span", [_vm._v("Loading...")]) : _vm._e(),
+    _vm._v(" "),
+    !_vm.loading
+      ? _c("div", { attrs: { id: "leaderboard" } }, [
+          _c("table", { staticClass: "table" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.pageElements, function(user) {
+                return _c("tr", { key: user.id }, [
+                  _c("th", { attrs: { scope: "row" } }, [
+                    _vm._v("#" + _vm._s(user.rank))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "a",
+                      {
+                        attrs: { href: "#" },
+                        on: {
+                          click: function() {
+                            return _vm.showUserModal(user.id)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(user.username))]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(Number(user.pp).toLocaleString()))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(Number(user.score).toLocaleString()))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.accuracy) + "%")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(Number(user.plays).toLocaleString()))
+                  ])
+                ])
+              }),
+              0
+            )
+          ]),
+          _vm._v(" "),
+          _c("nav", { attrs: { "aria-label": "Leaderboard Pagination" } }, [
+            _c(
+              "ul",
+              { staticClass: "pagination justify-content-center" },
+              [
+                _c("li", { staticClass: "page-item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#", "aria-label": "Previous" },
+                      on: { click: _vm.previousPage }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("«")
+                      ])
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.pageNumerotation, function(page) {
+                  return _c(
+                    "li",
+                    {
+                      staticClass: "page-item",
+                      class: { active: page === _vm.currentPage }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          key: page,
+                          staticClass: "page-link",
+                          attrs: { href: "#" },
+                          on: {
+                            click: function() {
+                              return _vm.changePage(page)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(_vm._s(page) + " "),
+                          page === _vm.currentPage
+                            ? _c("span", { staticClass: "sr-only" }, [
+                                _vm._v("(current)")
+                              ])
+                            : _vm._e()
+                        ]
+                      )
+                    ]
+                  )
+                }),
+                _vm._v(" "),
+                _c("li", { staticClass: "page-item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#", "aria-label": "Next" },
+                      on: { click: _vm.nextPage }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("»")
+                      ])
+                    ]
+                  )
+                ])
+              ],
+              2
+            )
+          ])
+        ])
+      : _vm._e(),
     _vm._v(" "),
     _c(
       "div",
       {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: !_vm.loading,
-            expression: "!loading"
-          }
-        ],
-        attrs: { id: "leaderboard" }
+        staticClass: "modal fade",
+        attrs: {
+          id: "user_preview_modal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "user_preview_modal",
+          "aria-hidden": "true"
+        }
       },
       [
-        _c("table", { staticClass: "table" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.pageElements, function(user) {
-              return _c("tr", { key: user.id }, [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _vm._v("#" + _vm._s(user.rank))
-                ]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.username))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(Number(user.pp).toLocaleString()))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(Number(user.score).toLocaleString()))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.accuracy) + "%")]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(Number(user.plays).toLocaleString()))])
-              ])
-            }),
-            0
-          )
-        ]),
-        _vm._v(" "),
-        _c("nav", { attrs: { "aria-label": "Leaderboard Pagination" } }, [
-          _c(
-            "ul",
-            { staticClass: "pagination justify-content-center" },
-            [
-              _c("li", { staticClass: "page-item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "page-link",
-                    attrs: { href: "#", "aria-label": "Previous" },
-                    on: { click: _vm.previousPage }
-                  },
-                  [
-                    _c("span", { attrs: { "aria-hidden": "true" } }, [
-                      _vm._v("«")
-                    ])
-                  ]
-                )
-              ]),
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered modal-lg",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(1),
               _vm._v(" "),
-              _vm._l(_vm.pageNumerotation, function(page) {
-                return _c(
-                  "li",
-                  {
-                    staticClass: "page-item",
-                    class: { active: page === _vm.currentPage }
-                  },
-                  [
-                    _c(
-                      "a",
-                      {
-                        key: page,
-                        staticClass: "page-link",
-                        attrs: { href: "#" },
-                        on: {
-                          click: function() {
-                            return _vm.changePage(page)
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(_vm._s(page) + " "),
-                        page === _vm.currentPage
-                          ? _c("span", { staticClass: "sr-only" }, [
-                              _vm._v("(current)")
-                            ])
-                          : _vm._e()
-                      ]
-                    )
-                  ]
-                )
-              }),
+              _vm.showUser
+                ? _c(
+                    "div",
+                    { staticClass: "modal-body" },
+                    [_c("user-card", { attrs: { user_id: _vm.userID } })],
+                    1
+                  )
+                : _vm._e(),
               _vm._v(" "),
-              _c("li", { staticClass: "page-item" }, [
+              _c("div", { staticClass: "modal-footer" }, [
                 _c(
-                  "a",
+                  "button",
                   {
-                    staticClass: "page-link",
-                    attrs: { href: "#", "aria-label": "Next" },
-                    on: { click: _vm.nextPage }
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" },
+                    on: {
+                      click: function() {
+                        return _vm.RedirectToUserProfile(_vm.userID)
+                      }
+                    }
                   },
-                  [
-                    _c("span", { attrs: { "aria-hidden": "true" } }, [
-                      _vm._v("»")
-                    ])
-                  ]
+                  [_vm._v("Open user profile")]
                 )
               ])
-            ],
-            2
-          )
-        ])
+            ])
+          ]
+        )
       ]
     )
   ])
@@ -38034,6 +38115,25 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Plays")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
     ])
   }
 ]
@@ -38059,113 +38159,84 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "user-card" } }, [
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.error,
-            expression: "error"
-          }
-        ],
-        staticClass: "alert alert-danger",
-        attrs: { role: "alert" }
-      },
-      [
-        _vm._v(
-          "\n    An unknown error has occured while getting this profile from our server. If you believe this is a bug, then submit an issue here: "
-        ),
-        _c(
-          "a",
-          {
-            staticClass: "alert-link",
-            attrs: {
-              href:
-                "https://github.com/osu-katakuna/osu-katakuna-web/issues/new"
-            }
-          },
-          [_vm._v("GitHub")]
+    _vm.error
+      ? _c(
+          "div",
+          { staticClass: "alert alert-danger", attrs: { role: "alert" } },
+          [
+            _vm._v(
+              "\n    An unknown error has occured while getting this profile from our server. If you believe this is a bug, then submit an issue here: "
+            ),
+            _c(
+              "a",
+              {
+                staticClass: "alert-link",
+                attrs: {
+                  href:
+                    "https://github.com/osu-katakuna/osu-katakuna-web/issues/new"
+                }
+              },
+              [_vm._v("GitHub")]
+            )
+          ]
         )
-      ]
-    ),
+      : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "card" }, [
       _c("div", { staticClass: "card-body" }, [
-        _c(
-          "div",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: !_vm.loaded,
-                expression: "!loaded"
-              }
-            ],
-            staticClass: "container"
-          },
-          [_c("span", [_vm._v("Loading...")])]
-        ),
+        !_vm.loaded
+          ? _c("div", { staticClass: "container" }, [
+              _c("span", [_vm._v("Loading...")])
+            ])
+          : _vm._e(),
         _vm._v(" "),
-        _c(
-          "div",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.loaded,
-                expression: "loaded"
-              }
-            ],
-            staticClass: "container",
-            attrs: { id: "user" }
-          },
-          [
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-sm-2" }, [
-                _c("img", {
-                  staticClass: "rounded float-left",
-                  attrs: { src: _vm.avatar, alt: "avatar" }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-sm" }, [
-                _c("div", { staticClass: "container" }, [
-                  _c("h1", [_vm._v(_vm._s(_vm.name))]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "subtitle", attrs: { id: "socialstatus" } },
-                    [
-                      _c("i", {
-                        staticClass: "status-dot",
-                        class: _vm.currentStatus.mode
-                      }),
-                      _vm._v(" "),
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            _vm.currentStatus &&
-                              _vm.statuses[_vm.currentStatus.mode]
-                              ? _vm.statuses[_vm.currentStatus.mode]
-                              : "Unknown"
-                          ) +
-                            " " +
+        _vm.loaded
+          ? _c("div", { staticClass: "container", attrs: { id: "user" } }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-2" }, [
+                  _c("img", {
+                    staticClass: "img-fluid rounded float-left",
+                    attrs: { src: _vm.avatar, alt: "avatar" }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm" }, [
+                  _c("div", { staticClass: "container" }, [
+                    _c("h1", [_vm._v(_vm._s(_vm.name))]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "subtitle",
+                        attrs: { id: "socialstatus" }
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "status-dot",
+                          class: _vm.currentStatus.mode
+                        }),
+                        _vm._v(" "),
+                        _c("span", [
+                          _vm._v(
                             _vm._s(
-                              _vm.currentStatus ? _vm.currentStatus.text : ""
-                            )
-                        )
-                      ])
-                    ]
-                  )
+                              _vm.currentStatus &&
+                                _vm.statuses[_vm.currentStatus.mode]
+                                ? _vm.statuses[_vm.currentStatus.mode]
+                                : "Unknown"
+                            ) +
+                              " " +
+                              _vm._s(
+                                _vm.currentStatus ? _vm.currentStatus.text : ""
+                              )
+                          )
+                        ])
+                      ]
+                    )
+                  ])
                 ])
               ])
             ])
-          ]
-        )
+          : _vm._e()
       ])
     ])
   ])
@@ -38251,7 +38322,12 @@ function normalizeComponent (
     options._ssrRegister = hook
   } else if (injectStyles) {
     hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      ? function () {
+        injectStyles.call(
+          this,
+          (options.functional ? this.parent : this).$root.$options.shadowRoot
+        )
+      }
       : injectStyles
   }
 
