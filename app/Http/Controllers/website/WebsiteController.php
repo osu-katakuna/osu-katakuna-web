@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class WebsiteController extends Controller
 {
     function root(Request $req) {
-      return view('welcome');
+      return view('website.homepage');
     }
 
     function register(Request $req) {

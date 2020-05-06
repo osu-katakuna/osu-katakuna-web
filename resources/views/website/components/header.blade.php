@@ -3,6 +3,13 @@
     <a class="navbar-brand" href="/">osu!katakuna</a>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav">
+        <li class="nav-item @if(Route::is('home')) active @endif">
+          <a class="nav-link" href="{{ route("home") }}">Home
+            @if(Route::is('home'))
+              <span class="sr-only">(current)</span>
+            @endif
+          </a>
+        </li>
         <li class="nav-item @if(Route::is('leaderboard')) active @endif">
           <a class="nav-link" href="{{ route("leaderboard") }}">Leaderboard
             @if(Route::is('leaderboard'))
