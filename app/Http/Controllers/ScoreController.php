@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Beatmap;
 use App\BeatmapSet;
 use App\User;
-use App\Http\Controllers\BeatmapController;
 
 class ScoreController extends Controller
 {
@@ -18,13 +17,6 @@ class ScoreController extends Controller
       $title = substr(explode(" - ", $req->get("f"))[1], 0, strrpos(explode(" - ", $req->get("f"))[1], "(") - 1);
 
       $beatmap = BeatmapSet::where("filename", "=", $req->get("f"))->get()->first();
-
-      if(!$beatmap) {
-        if(!BeatmapController::DownloadBeatmap(explode(" [", $req->get("f"))[0])) {
-          BeatmapController::DownloadBeatmap("$artist - $title");
-        }
-        $beatmap = BeatmapSet::where("filename", "=", $req->get("f"))->get()->first();
-      }
 
       if(!$beatmap) {
         echo '-1|false';
@@ -71,7 +63,7 @@ class ScoreController extends Controller
       echo "[bold:0,size:20]" . explode(".osu", $_GET["f"])[0] . "\n";
       echo "1.0\n";
 
-      $play = $player->played_scores()->where("beatmapset_id", "=", $beatmap->id)->orderBy("score", "DESC")->get()->first();
+      $play = $player->played_scores()->where("beatmapset_id", "=", $beatmap->id)->where("pass", "=", "1")->orderBy("score", "DESC")->get()->first();
       if($play) {
         $replayID = $play->id;
         $userID = $play->player->id;
