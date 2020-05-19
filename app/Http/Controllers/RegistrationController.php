@@ -17,15 +17,15 @@ class RegistrationController extends Controller
           'password' => 'required|max:255'
       ]);
 
-      if(strlen($req->get("username")) != strlen(utf8_decode($req->get("username")))) {
-        $message = "Invalid username!";
-        return view("website.register")->withErrors($message);
-      }
-
       if ($validator->fails()) {
         return redirect('/register')
                     ->withErrors($validator)
                     ->withInput();
+      }
+
+      if(strlen($req->get("username")) != strlen(utf8_decode($req->get("username")))) {
+        $message = "Invalid username!";
+        return view("website.register")->withErrors($message);
       }
 
       $u = User::where("username", "=", $req->get("username"))->get();

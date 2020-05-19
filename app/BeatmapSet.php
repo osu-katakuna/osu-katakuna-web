@@ -41,7 +41,7 @@ class BeatmapSet extends Model
       $r = 1;
 
       foreach($plays as $play) {
-        if($play->player->id == $user->id) return $r;
+        if($play->player != NULL && $play->player->id == $user->id) return $r;
         $r += 1;
       }
 

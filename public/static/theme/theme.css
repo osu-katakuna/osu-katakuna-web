@@ -20,6 +20,26 @@ dl, ol, ul {
   background-color: #21BA45 !important;
 }
 
+.status-dot.direct {
+  background-color: #0A1C48 !important;
+}
+
+.status-dot.afk {
+  background-color: #000000 !important;
+}
+
+.status-dot.mp-lobby {
+  background-color: #ffac37 !important;
+}
+
+.status-dot.playing {
+  background-color: #6acccc !important;
+}
+
+.status-dot.modding {
+  background-color: #4c8e4c !important;
+}
+
 .flag {
   display: inline-block;
   position: relative;

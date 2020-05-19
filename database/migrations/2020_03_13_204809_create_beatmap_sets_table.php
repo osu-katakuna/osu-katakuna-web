@@ -28,8 +28,8 @@ class CreateBeatmapSetsTable extends Migration
             $table->string("md5");
             $table->integer("status");
             $table->string("author");
-            $table->float("aim");
-            $table->float("speed");
+            $table->float("aim")->default(0);
+            $table->float("speed")->default(0);
             $table->string("filename")->nullable();
 
             $table->foreign("beatmap_id")->references("id")->on("beatmaps");

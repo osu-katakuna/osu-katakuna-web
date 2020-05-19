@@ -19,6 +19,7 @@ class Chart {
   public $ppBefore = 0;
   public $ppAfter = 0;
   public $onlineScoreId = 0;
+  public $username = "";
   private $achievements = array();
 
   public function addAchievement($achv) {
@@ -38,6 +39,8 @@ class Chart {
     return "chartId:" . $this->id .
        "|chartUrl:" . $this->url .
        "|chartName:" . $this->name .
+       "|beatmapRankingBefore:" . $this->rankBefore .
+       "|beatmapRankingAfter:" . $this->rankBefore .
        "|rankBefore:" . $this->rankBefore .
        "|rankAfter:" . $this->rankAfter .
        "|maxComboBefore:" . $this->maxComboBefore .
@@ -48,9 +51,12 @@ class Chart {
        "|rankedScoreAfter:" . $this->rankedScoreBefore .
        "|totalScoreBefore:" . $this->totalScoreAfter .
        "|totalScoreAfter:" . $this->totalScoreAfter .
+       "|toNextRank:" . $this->rankAfter .
+       "|toNextRankUser:" . $this->username .
        "|ppBefore:" . $this->ppBefore .
        "|ppAfter:" . $this->ppAfter .
        (count($this->achievements) < 1 ? "" : "|achievements-new:" . $this->GetAchievementString()) .
+       (count($this->achievements) < 1 ? "" : "|achievements:" . $this->GetAchievementString()) .
        "|onlineScoreId:" . $this->onlineScoreId;
   }
 

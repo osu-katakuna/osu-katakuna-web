@@ -15,6 +15,10 @@ class WebsiteController extends Controller
       return view('website.register');
     }
 
+    function login(Request $req) {
+      return view('website.login');
+    }
+
     function addBeatmap(Request $req) {
       return view('website.beatmap-add');
     }

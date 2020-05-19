@@ -18,6 +18,11 @@ Route::get('/home', 'website\WebsiteController@root')->name('home');
 Route::get('/register', 'website\WebsiteController@register')->name('register');
 Route::post('/register', "RegistrationController@registerUser")->name('register');
 
+Route::get('/login', 'website\WebsiteController@login')->name('login');
+Route::post('/login', "website\UserController@login")->name('login');
+
+Route::get('/logout', 'website\UserController@logout');
+
 Route::get('/add-beatmap', 'website\WebsiteController@addBeatmap')->name('add-beatmap');
 Route::post('/add-beatmap', "BeatmapController@registerUploadedBeatmap")->name('add-beatmap');
 
@@ -46,6 +51,7 @@ Route::get('/preview/{id}.mp3', "BeatmapController@song_preview");
 Route::get('/get/replay/{id}', "ReplayController@getFull");
 
 Route::post('/web/osu-submit-modular-selector.php', "BeatmapController@submit_score");
+Route::post('/web/osu-submit-modular.php', "BeatmapController@submit_score");
 Route::get('/web/osu-osz2-getscores.php', "ScoreController@get_score");
 
 Route::post('/users', 'RegistrationController@osuRegisterUser');

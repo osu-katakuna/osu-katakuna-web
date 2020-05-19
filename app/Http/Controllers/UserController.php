@@ -9,6 +9,7 @@ use \App\PrivateMessage;
 
 class UserController extends Controller
 {
+  
     function banUser(Request $request, $id) {
       $user = User::find($id);
 
