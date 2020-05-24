@@ -10,49 +10,51 @@
         <li class="nav-item @if(Route::is('home')) active @endif">
           <a class="nav-link" href="{{ route("home") }}">Home
             @if(Route::is('home'))
-              <span class="sr-only">(current)</span>
+            <span class="sr-only">(current)</span>
             @endif
           </a>
         </li>
         <li class="nav-item @if(Route::is('leaderboard')) active @endif">
           <a class="nav-link" href="{{ route("leaderboard") }}">Leaderboard
             @if(Route::is('leaderboard'))
-              <span class="sr-only">(current)</span>
+            <span class="sr-only">(current)</span>
             @endif
           </a>
         </li>
       </ul>
-    @auth
+      @auth
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
           <div class="dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <img src="https://a.katakuna.cc/{{ Auth::user()->id }}" class="img-responsive img-rounded" style="max-height: 1.5em; max-width: 1.5em; border-radius: 500rem;">&nbsp;
               {{ Auth::user()->username }}
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/u/{{ Auth::user()->id }}">Profile</a>
               <a class="dropdown-item" href="/logout">Log out</a>
             </div>
           </div>
         </li>
       </ul>
-    @else
+      @else
       <ul class="navbar-nav ml-auto">
         <li class="nav-item @if(Route::is('login')) active @endif">
           <a class="nav-link" href="{{ route("login") }}">Login
             @if(Route::is('login'))
-              <span class="sr-only">(current)</span>
+            <span class="sr-only">(current)</span>
             @endif
           </a>
         </li>
         <li class="nav-item @if(Route::is('register')) active @endif">
           <a class="nav-link" href="{{ route("register") }}">Register
             @if(Route::is('register'))
-              <span class="sr-only">(current)</span>
+            <span class="sr-only">(current)</span>
             @endif
           </a>
         </li>
       </ul>
-    @endauth
-  </div>
+      @endauth
+    </div>
   </div>
 </nav>
