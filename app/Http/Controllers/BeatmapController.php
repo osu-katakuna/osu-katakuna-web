@@ -64,7 +64,7 @@ class BeatmapController extends Controller
     }
 
     public static function GetOsuBMMetadata($data, $name) {
-      return explode("\r\n", explode("$name:", $data)[1])[0];
+      return count(explode("$name:", $data)) > 1 ? explode("\r\n", explode("$name:", $data)[1])[0] : NULL;
     }
 
     public static function AddBeatmapToDB($beatmap_path, $_beatmap, $_beatmaps) {
@@ -471,7 +471,7 @@ class BeatmapController extends Controller
                 $map_data["tags"] = "";
                 $map_data["source"] = "";
                 $map_data["genreId"] = "1";
-                $map_data["id"] = BeatmapController::GetOsuBMMetadata($_beatmap->getFromIndex($i), "BeatmapSetID");
+                $map_data["id"] = BeatmapController::GetOsuBMMetadata($_beatmap->getFromIndex($i), "BeatmapSetID") ? BeatmapController::GetOsuBMMetadata($_beatmap->getFromIndex($i), "BeatmapSetID") : rand(); // addressing an issue when Set ID is not defined. Giving a random ID
               }
           }
       }
