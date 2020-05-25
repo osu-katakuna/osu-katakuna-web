@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'website\WebsiteController@root')->name('home');
 Route::get('/home', 'website\WebsiteController@root')->name('home');
 
+Route::get('/admin', 'website\WebsiteController@root')->name('admin');
+
 Route::get('/register', 'website\WebsiteController@register')->name('register');
 Route::post('/register', "RegistrationController@registerUser")->name('register');
 

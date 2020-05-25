@@ -40,6 +40,10 @@ dl, ol, ul {
   background-color: #4c8e4c !important;
 }
 
+.status-dot.watching {
+  background-color: #3b3b98 !important;
+}
+
 .flag {
   display: inline-block;
   position: relative;

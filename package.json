@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.13.0",
         "vue-native-websocket": "^2.0.14",
         "vue-websocket": "^0.2.3"
     }

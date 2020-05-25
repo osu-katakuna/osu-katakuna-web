@@ -36,6 +36,15 @@
             </div>
           </div>
         </li>
+        @if (Auth::user()->hasPermission("admin.dashboard"))
+          <li class="nav-item @if(Route::is('admin')) active @endif">
+            <a class="nav-link" href="{{ route("admin") }}">Administration&nbsp;
+              @if(Route::is('admin'))
+              <span class="sr-only">(current)</span>
+              @endif
+            </a>
+          </li>
+        @endif
       </ul>
       @else
       <ul class="navbar-nav ml-auto">

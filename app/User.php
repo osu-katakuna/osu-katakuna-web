@@ -20,6 +20,25 @@ class User extends Authenticatable
       return $this->hasMany("App\UserPlayBeatmap", "user_id");
     }
 
+    function role() {
+      return $this->belongsTo("App\UserRole", "role_id");
+    }
+
+    function hasPermission($perm) {
+      if(!$this->role) return false;
+      if($this->role->hasPermission("*")) return true;
+      if($this->role->hasPermission($perm)) return true;
+
+      $perms_exploded = explode(".", $perm);
+
+      for($i = 0; $i < count($perms_exploded); $i++) {
+        $perm = implode(".", array_slice($perms_exploded, 0, $i + 1)) . '.*';
+        if($this->role->hasPermission($perm)) return true;
+      }
+
+      return false;
+    }
+
     function currentRankingPosition($gameMode = 0) {
       $users = User::where("bot", "=", "0")->get();
       $scores = array();

@@ -26,6 +26,7 @@
   <meta name="theme-color" content="#ffffff">
 
   @section("style")
+    <link rel="stylesheet" href="{{ asset("/css/app.css") . "?" . \Str::random(10) }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset("/static/theme/theme.css") . "?" . \Str::random(10) }}">
   @show

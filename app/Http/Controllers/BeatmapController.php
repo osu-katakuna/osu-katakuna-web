@@ -344,13 +344,13 @@ class BeatmapController extends Controller
 
       // this is how you do an achievement :D
 
-      $achv = [
-          "Icon" => "osu-combo-2000",
-          "DisplayName" => "Debugging",
-          "Description" => "If you see this, then the scoring system is debugged right now! :D"
-      ];
+      //$achv = [
+      //    "Icon" => "osu-combo-2000",
+      //    "DisplayName" => "Debugging",
+      //    "Description" => "If you see this, then the scoring system is debugged right now! :D"
+      //];
 
-      $overall_ranking->addAchievement($achv);
+      // $overall_ranking->addAchievement($achv);
 
       $play = new UserPlayBeatmap();
       $play->player()->associate($user);
