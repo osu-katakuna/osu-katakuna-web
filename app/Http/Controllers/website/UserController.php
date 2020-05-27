@@ -39,7 +39,7 @@ class UserController extends Controller
 
       $user = User::where("username", "=", $request->get("username"))->orWhere("email", "=", $request->get("username"))->get()->first();
       if($user) {
-        if(md5($request->get("password")) === $user->password_hash) {
+        if(hash("sha256", md5($request->get("password"))) === $user->password_hash) {
           Auth::login($user);
           return redirect(session('redirect') != NULL ? session('redirect') : "/");
         } else {

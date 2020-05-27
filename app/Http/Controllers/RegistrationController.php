@@ -37,7 +37,7 @@ class RegistrationController extends Controller
 
         $new_user->username = $req->get("username");
         $new_user->email = $req->get("email");
-        $new_user->password_hash = md5($req->get("password"));
+        $new_user->password_hash = hash("sha256", md5($req->get("password")));
 
         $new_user->save();
       }
@@ -101,7 +101,7 @@ class RegistrationController extends Controller
 
       $new_user->username = ((object)$req->get("user"))->username;
       $new_user->email = ((object)$req->get("user"))->user_email;
-      $new_user->password_hash = md5(((object)$req->get("user"))->password);
+      $new_user->password_hash = hash("sha256", md5(((object)$req->get("user"))->password));
 
       $new_user->save();
 
