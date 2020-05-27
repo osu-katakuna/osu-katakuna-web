@@ -1,11 +1,21 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic');
 
 // Variables
 @import 'variables';
 
+// OverlayScrollbars
+@import '~overlayscrollbars/css/OverlayScrollbars.css';
+
+// iCheck
+@import '~icheck-bootstrap/icheck-bootstrap.css';
+
+// AdminLTE
+@import '~admin-lte/dist/css/adminlte.css';
+
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+// @import '~bootstrap/scss/bootstrap'; // already imported by AdminLTE
 
 // Font Awesome
-@import "~@fortawesome/fontawesome-free/scss/fontawesome"; 
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";

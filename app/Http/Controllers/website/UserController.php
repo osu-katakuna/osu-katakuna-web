@@ -20,6 +20,7 @@ class UserController extends Controller
 
     function login(Request $request) {
       $credentials = $request->only('username', 'password');
+      $request->session()->keep(['redirect']);
 
       $validator = Validator::make($request->all(), [
           'username' => 'required|exists:users,username|max:20',
@@ -40,12 +41,12 @@ class UserController extends Controller
       if($user) {
         if(md5($request->get("password")) === $user->password_hash) {
           Auth::login($user);
-          return redirect("/");
+          return redirect(session('redirect') != NULL ? session('redirect') : "/");
         } else {
-          return redirect("login")->withErrors("Wrong password.")->withInput();
+          return redirect("login")->with("redirect", session('redirect'))->withErrors("Wrong password.")->withInput();
         }
       }
-      return redirect("login")->withErrors("Unknown user.")->withInput();
+      return redirect("login")->with("redirect", session('redirect'))->withErrors("Unknown user.")->withInput();
     }
 
     function logout(Request $request) {

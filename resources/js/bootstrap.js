@@ -9,7 +9,7 @@ import '@fortawesome/fontawesome-free/js/brands'
  * for JavaScript based Bootstrap features such as modals and tabs. This
  * code may be modified to fit the specific needs of your application.
  */
-//
+
 // try {
 //     window.Popper = require('popper.js').default;
 //     window.$ = window.jQuery = require('jquery');
@@ -22,6 +22,9 @@ import '@fortawesome/fontawesome-free/js/brands'
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
+
+require('overlayscrollbars');
+import 'admin-lte/dist/js/adminlte'
 
 window.axios = require('axios');
 

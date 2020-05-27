@@ -7,6 +7,9 @@
   <div class="card">
     <div class="card-body">
       <h1>Login to osu!katakuna</h1>
+      @if (session("redirect"))
+        <div class="alert alert-info" role="alert">Please log in to continue.</div>
+      @endif
       @if (isset($message))
         <div class="alert alert-info" role="alert">{{ $message }}</div>
       @endif

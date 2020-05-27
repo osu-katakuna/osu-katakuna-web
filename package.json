@@ -11,9 +11,9 @@
     },
     "devDependencies": {
         "axios": "^0.19",
-        "bootstrap": "^4.0.0",
+        "bootstrap": "^4.4.1",
         "cross-env": "^7.0",
-        "jquery": "^3.2",
+        "jquery": "^3.4.1",
         "laravel-mix": "^5.0.1",
         "lodash": "^4.17.13",
         "popper.js": "^1.12",
@@ -25,6 +25,9 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.13.0",
+        "admin-lte": "^3.0.5",
+        "icheck-bootstrap": "^3.0.1",
+        "overlayscrollbars": "^1.12.0",
         "vue-native-websocket": "^2.0.14",
         "vue-websocket": "^0.2.3"
     }

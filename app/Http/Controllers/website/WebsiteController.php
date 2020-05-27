@@ -16,14 +16,19 @@ class WebsiteController extends Controller
     }
 
     function login(Request $req) {
+      $req->session()->keep(['redirect']);
       return view('website.login');
     }
 
     function addBeatmap(Request $req) {
-      return view('website.beatmap-add');
+      return view('admin.beatmap-add');
     }
 
     function importReplays(Request $req) {
-      return view('website.import-replays');
+      return view('admin.import-replays');
+    }
+
+    function dashboard(Request $req) {
+      return view('admin.components.page');
     }
 }

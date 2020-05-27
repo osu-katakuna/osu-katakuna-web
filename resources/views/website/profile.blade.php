@@ -4,7 +4,9 @@
 
 @section("content")
 <div class="jumbotron">
-  <user-card :user_id="{{ $user->id }}" />
+  <div id="app">
+    <user-card :user_id="{{ $user->id }}" />
+  </div>
   <div class="card">
     <div class="card-body">
       <div class="container">

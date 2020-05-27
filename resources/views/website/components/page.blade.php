@@ -39,9 +39,7 @@
 <body>
   @include("website.components.header")
   <div class="container">
-    <div id="app">
-      @yield("content")
-    </div>
+    @yield("content")
   </div>
   @include("website.components.footer")
   <script src="//twemoji.maxcdn.com/2/twemoji.min.js?2.2"></script>

@@ -15,7 +15,29 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'website\WebsiteController@root')->name('home');
 Route::get('/home', 'website\WebsiteController@root')->name('home');
 
-Route::get('/admin', 'website\WebsiteController@root')->name('admin');
+// ========== START OF Administration Routes =============
+
+Route::middleware(['hasPermission:admin.dashboard'])->group(function () {
+  Route::get('/admin', 'website\WebsiteController@dashboard')->name('admin');
+
+  Route::middleware(['hasPermission:admin.beatmap.manage'])->group(function () {
+    Route::get('/add-beatmap', 'website\WebsiteController@addBeatmap')->middleware('hasPermission:admin.beatmap.manage.add')->name('add-beatmap');
+    Route::post('/add-beatmap', "BeatmapController@registerUploadedBeatmap")->middleware('hasPermission:admin.beatmap.manage.add')->name('add-beatmap');
+  });
+
+  Route::middleware(['hasPermission:admin.plays.manage'])->group(function () {
+    Route::get('/import-replays', 'website\WebsiteController@importReplays')->middleware('hasPermission:admin.plays.manage.import')->name('import-replays');
+    Route::post('/import-replays', "ReplayController@importReplays")->middleware('hasPermission:admin.plays.manage.import')->name('import-replays');
+  });
+
+  Route::middleware(['hasPermission:admin.users.manage'])->group(function () {
+    Route::get('/admin/ban/user/{id}', "UserController@banUser")->middleware('hasPermission:admin.users.manage.ban');
+    Route::get('/admin/unban/user/{id}', "UserController@unbanUser")->middleware('hasPermission:admin.users.manage.unban');
+    Route::get('/admin/delete/user/{id}', "UserController@deleteUser")->middleware('hasPermission:admin.users.manage.delete');
+  });
+});
+
+// ========== END OF Administration Routes ================
 
 Route::get('/register', 'website\WebsiteController@register')->name('register');
 Route::post('/register', "RegistrationController@registerUser")->name('register');
@@ -24,12 +46,6 @@ Route::get('/login', 'website\WebsiteController@login')->name('login');
 Route::post('/login', "website\UserController@login")->name('login');
 
 Route::get('/logout', 'website\UserController@logout');
-
-Route::get('/add-beatmap', 'website\WebsiteController@addBeatmap')->name('add-beatmap');
-Route::post('/add-beatmap', "BeatmapController@registerUploadedBeatmap")->name('add-beatmap');
-
-Route::get('/import-replays', 'website\WebsiteController@importReplays')->name('import-replays');
-Route::post('/import-replays', "ReplayController@importReplays")->name('import-replays');
 
 Route::get('/leaderboard', function() {
   return view('website.leaderboard');
@@ -44,7 +60,7 @@ Route::get('/web/osu-getseasonal.php', "SeasonalController@getSeasonal");
 Route::get('/backgrounds/{bg}', "SeasonalController@getBackground");
 Route::get('/web/maps/{map}', "BeatmapController@StreamMap");
 Route::get('/d/{id}', "BeatmapController@download");
-Route::get('/u/{id}', "website\UserController@userProfile");
+Route::get('/u/{id}', "website\UserController@userProfile")->name('user');
 Route::get('/users/{id}', "website\UserController@userProfile");
 Route::get('/thumb/{id}l.jpg', "BeatmapController@thumbnail_large");
 Route::get('/thumb/{id}.jpg', "BeatmapController@thumbnail");
@@ -57,7 +73,3 @@ Route::post('/web/osu-submit-modular.php', "BeatmapController@submit_score");
 Route::get('/web/osu-osz2-getscores.php', "ScoreController@get_score");
 
 Route::post('/users', 'RegistrationController@osuRegisterUser');
-
-// Route::get('/ban/user/{id}', "UserController@banUser");
-// Route::get('/unban/user/{id}', "UserController@unbanUser");
-// Route::get('/delete/user/{id}', "UserController@deleteUser");

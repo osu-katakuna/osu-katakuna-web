@@ -27,7 +27,7 @@
         <li class="nav-item">
           <div class="dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <img src="https://a.katakuna.cc/{{ Auth::user()->id }}" class="img-responsive img-rounded" style="max-height: 1.5em; max-width: 1.5em; border-radius: 500rem;">&nbsp;
+              <img src="{{ env("AVATAR_SERVER") }}/{{ Auth::user()->id }}" class="img-responsive img-rounded" style="max-height: 1.5em; max-width: 1.5em; border-radius: 500rem;">&nbsp;
               {{ Auth::user()->username }}
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">

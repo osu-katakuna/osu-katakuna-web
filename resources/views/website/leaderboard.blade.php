@@ -8,7 +8,9 @@
     <div class="card-body">
       <div class="container">
         <h1>leaderboard</h1>
-        <leaderboard/>
+        <div id="app">
+          <leaderboard/>
+        </div>
       </div>
     </div>
   </div>

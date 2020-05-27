@@ -18,54 +18,54 @@ use Symfony\Component\Process\Process;
 
 class BeatmapController extends Controller
 {
-    public static function DownloadBeatmap($query, $set = false, $direct_import = false) {
-      if(!$direct_import) {
-        $maps = json_decode(file_get_contents("http://bloodcat.com/osu/?mod=json&c=" . ($set ? "s" : "o") . "&s=0,1,2,3&m=0,1,2,3&q=" . urlencode($query) . "&p=1"));
-        if(count($maps) < 1) return false;
+  public static function DownloadBeatmap($query, $set = false, $direct_import = false, $bm = false) {
+    if(!$direct_import) {
+      $maps = json_decode(file_get_contents("http://bloodcat.com/osu/?mod=json&c=" . ($set ? "s" : ($bm ? "b" : "o")) . "&s=0,1,2,3&m=0,1,2,3&q=" . urlencode($query) . "&p=1"));
+      if(count($maps) < 1) return false;
+    } else {
+      $maps = array($query);
+    }
+
+    foreach($maps as $map) {
+      $id = $map->id;
+      $artist = $map->artist;
+      $title = $map->title;
+      $creator = $map->creator;
+
+      $beatmap = new Beatmap();
+      if($map->id != -1) $beatmap->id = $map->id;
+      $beatmap->sync_date = $map->synced;
+      $beatmap->title = $map->title;
+      $beatmap->title_unicode = $map->titleU;
+      $beatmap->artist = $map->artist;
+      $beatmap->artist_unicode = $map->artistU;
+      $beatmap->status = $map->status;
+      $beatmap->creator_id = $map->creatorId;
+      $beatmap->creator = $map->creator;
+      $beatmap->tags = $map->tags;
+      $beatmap->source = $map->source;
+      $beatmap->genre_id = $map->genreId;
+      $beatmap->filename = BeatmapController::FileNameClean("beatmaps/$artist - $title ($creator).osz");
+
+      if(!Beatmap::find($map->id)) {
+        $beatmap->save();
       } else {
-        $maps = array($query);
+        $beatmap = Beatmap::find($map->id);
       }
 
-      foreach($maps as $map) {
-        $id = $map->id;
-        $artist = $map->artist;
-        $title = $map->title;
-        $creator = $map->creator;
-
-        $beatmap = new Beatmap();
-        if($map->id != -1) $beatmap->id = $map->id;
-        $beatmap->sync_date = $map->synced;
-        $beatmap->title = $map->title;
-        $beatmap->title_unicode = $map->titleU;
-        $beatmap->artist = $map->artist;
-        $beatmap->artist_unicode = $map->artistU;
-        $beatmap->status = $map->status;
-        $beatmap->creator_id = $map->creatorId;
-        $beatmap->creator = $map->creator;
-        $beatmap->tags = $map->tags;
-        $beatmap->source = $map->source;
-        $beatmap->genre_id = $map->genreId;
-        $beatmap->filename = BeatmapController::FileNameClean("beatmaps/$artist - $title ($creator).osz");
-
-        if(!Beatmap::find($map->id)) {
-          $beatmap->save();
-        } else {
-          $beatmap = Beatmap::find($map->id);
-        }
-
-        if(!file_exists(storage_path() . BeatmapController::FileNameClean("/app/beatmaps/$artist - $title ($creator).osz")) && !$direct_import) {
-          Storage::put(BeatmapController::FileNameClean("beatmaps/$artist - $title ($creator).osz"), file_get_contents("http://bloodcat.com/osu/s/$id"));
-        }
-
-        BeatmapController::AddBeatmapToDB(storage_path() . BeatmapController::FileNameClean("/app/beatmaps/$artist - $title ($creator).osz"), $beatmap, $map->beatmaps);
+      if(!file_exists(storage_path() . BeatmapController::FileNameClean("/app/beatmaps/$artist - $title ($creator).osz")) && !$direct_import) {
+        Storage::put(BeatmapController::FileNameClean("beatmaps/$artist - $title ($creator).osz"), file_get_contents("http://bloodcat.com/osu/s/$id"));
       }
 
-      return true;
+      BeatmapController::AddBeatmapToDB(storage_path() . BeatmapController::FileNameClean("/app/beatmaps/$artist - $title ($creator).osz"), $beatmap, $map->beatmaps);
     }
 
-    public static function GetOsuBMMetadata($data, $name) {
-      return count(explode("$name:", $data)) > 1 ? explode("\r\n", explode("$name:", $data)[1])[0] : NULL;
-    }
+    return true;
+  }
+
+  public static function GetOsuBMMetadata($data, $name) {
+    return explode("\r\n", explode("$name:", $data)[1])[0];
+  }
 
     public static function AddBeatmapToDB($beatmap_path, $_beatmap, $_beatmaps) {
       $beatmap = new \ZipArchive();
