@@ -27,7 +27,6 @@
 
   @section("style")
     <link rel="stylesheet" href="{{ asset("/css/app.css") . "?" . \Str::random(10) }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset("/static/theme/theme.css") . "?" . \Str::random(10) }}">
   @show
 
@@ -45,9 +44,8 @@
   <script src="//twemoji.maxcdn.com/2/twemoji.min.js?2.2"></script>
   @yield("script")
   @section("post-script")
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="{{ asset('js/app.js') }}?{{ rand() }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
   @show
 </body>
 </html>
