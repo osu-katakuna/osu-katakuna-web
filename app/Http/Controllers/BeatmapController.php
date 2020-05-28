@@ -281,14 +281,15 @@ class BeatmapController extends Controller
 
     	$scoreDataArray = explode(':', $scoreData);
     	$username = rtrim($scoreDataArray[1], ' ');
-      $user = User::where([["username", "=", $username], ["password_hash", "=", $_POST["pass"]]])->get()->first();
+      $user = User::where([["username", "=", $username], ["password_hash", "=", hash("sha256", $_POST["pass"])]])->get()->first();
       $bm = BeatmapSet::where("md5", "=", $scoreDataArray[0])->get()->first();
+
       if(!$bm) {
         return "error: beatmap";
       }
 
       if(!$user) {
-        return "error: beatmap";
+        return "error: pass";
       }
 
       $fileChecksum = $scoreDataArray[0];
@@ -323,7 +324,7 @@ class BeatmapController extends Controller
 
       if($last_good_play) {
         $beatmap_ranking->maxComboBefore = $last_good_play->maxCombo;
-        $beatmap_ranking->accuracyBefore = $req->get("osuver") !== "20200427" ? $last_good_play->accuracy() : $last_good_play->accuracy() * 100;
+        $beatmap_ranking->accuracyBefore = $req->get("osuver") >= "20200427" ? $last_good_play->accuracy() : $last_good_play->accuracy() * 100;
         $beatmap_ranking->rankedScoreBefore = $last_good_play->score;
         $beatmap_ranking->totalScoreBefore = $last_good_play->score;
         $beatmap_ranking->ppBefore = 0;
@@ -336,7 +337,7 @@ class BeatmapController extends Controller
       $overall_ranking->username = $user->username;
       $overall_ranking->url = "https://osu.ppy.sh/u/" . $user->id;
       $overall_ranking->rankBefore = $user->currentRankingPosition($gameMode);
-      $overall_ranking->accuracyBefore = $req->get("osuver") !== "20200427" ? $user->accuracy($gameMode) / 100 : $user->accuracy($gameMode);
+      $overall_ranking->accuracyBefore = $req->get("osuver") <= "20200427" ? $user->accuracy($gameMode) / 100 : $user->accuracy($gameMode);
       $overall_ranking->rankedScoreBefore = $user->totalScore($gameMode);
       $overall_ranking->totalScoreBefore = $user->totalScore($gameMode);
       $overall_ranking->ppBefore = 0;
@@ -373,7 +374,7 @@ class BeatmapController extends Controller
       $play->save();
 
       $overall_ranking->rankAfter = $user->currentRankingPosition($gameMode);
-      $overall_ranking->accuracyAfter = $req->get("osuver") !== "20200427" ? $user->accuracy($gameMode) / 100 : $user->accuracy($gameMode);
+      $overall_ranking->accuracyAfter = $req->get("osuver") <= "20200427" ? $user->accuracy($gameMode) / 100 : $user->accuracy($gameMode);
       $overall_ranking->rankedScoreAfter = $user->totalScore($gameMode);
       $overall_ranking->totalScoreAfter = $user->totalScore($gameMode);
       $overall_ranking->onlineScoreId = $play->id;
@@ -382,7 +383,7 @@ class BeatmapController extends Controller
       $beatmap_ranking->rankAfter = $bm->positionOfUser($user);
       $beatmap_ranking->totalScoreAfter = $play->score;
       $beatmap_ranking->rankedScoreAfter = $play->score;
-      $beatmap_ranking->accuracyAfter = $req->get("osuver") !== "20200427" ? $play->accuracy() : $play->accuracy() * 100;
+      $beatmap_ranking->accuracyAfter = $req->get("osuver") <= "20200427" ? $play->accuracy() : $play->accuracy() * 100;
       if($beatmap_ranking->accuracyAfter - $beatmap_ranking->accuracyBefore == 0) {
         $beatmap_ranking->accuracyBefore = 0;
       }
@@ -392,6 +393,7 @@ class BeatmapController extends Controller
         $mods_text = "";
         if($mods != "0") {
           $mods_text = " +";
+          $mods_text .= ($mods & OsuConsts::Autoplay) ? "AP" : "";
           $mods_text .= ($mods & OsuConsts::HardRock) ? "HR" : "";
           $mods_text .= ($mods & OsuConsts::NoFail) ? "NF" : "";
           $mods_text .= ($mods & OsuConsts::SuddenDeath) ? "SD" : "";
