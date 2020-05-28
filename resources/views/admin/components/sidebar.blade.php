@@ -20,7 +20,7 @@
   <nav class="mt-2">
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
       @HasPermission("admin.dashboard")
-      <li class="nav-item has-treeview">
+      <li class="nav-item">
         <a href="{{ route("admin") }}" class="nav-link">
           <i class="nav-icon fas fa-tachometer-alt"></i>
           <p>Dashboard</p>
@@ -28,22 +28,34 @@
       </li>
       @endHasPermission
       @HasPermission("admin.beatmap.manage")
-      <li class="nav-item has-treeview">
-        <a href="#" class="nav-link">
+      <li class="nav-item has-treeview @if(Route::is('beatmaps.*')) menu-open @endif">
+        <a href="#" class="nav-link @if(Route::is('beatmaps.*')) active @endif">
           <i class="nav-icon fas fa-copy"></i>
           <p>
             Beatmaps
             <i class="fas fa-angle-left right"></i>
           </p>
         </a>
+        @HasPermission("admin.beatmap.manage")
         <ul class="nav nav-treeview">
           <li class="nav-item">
-            <a href="{{ route('add-beatmap') }}" class="nav-link">
-              <i class="far fa-upload"></i>
+            <a href="{{ route('beatmaps.manage') }}" class="nav-link @if(Route::is('beatmaps.manage')) active @endif">
+              <i class="fas fa-pencil-alt nav-icon"></i>
+              <p>Manage</p>
+            </a>
+          </li>
+        </ul>
+        @endHasPermission
+        @HasPermission("admin.beatmap.manage.add")
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{{ route('beatmaps.add') }}" class="nav-link @if(Route::is('beatmaps.add')) active @endif">
+              <i class="fas fa-file-upload nav-icon"></i>
               <p>Import</p>
             </a>
           </li>
         </ul>
+        @endHasPermission
       </li>
       @endHasPermission
     </ul>

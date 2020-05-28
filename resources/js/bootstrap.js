@@ -10,21 +10,23 @@ import '@fortawesome/fontawesome-free/js/brands'
  * code may be modified to fit the specific needs of your application.
  */
 
-// try {
-//     window.Popper = require('popper.js').default;
-//     window.$ = window.jQuery = require('jquery');
-//
-//     require('bootstrap');
-// } catch (e) {}
+try {
+    window.Popper = require('popper.js').default;
+    window.$ = window.jQuery = require('jquery');
+
+    require('bootstrap');
+} catch (e) {}
+
+// add AdminLTE Stuff
+
+require('overlayscrollbars');
+require('admin-lte');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
-
-require('overlayscrollbars');
-import 'admin-lte/dist/js/adminlte'
 
 window.axios = require('axios');
 

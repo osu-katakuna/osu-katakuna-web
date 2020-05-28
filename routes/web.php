@@ -21,8 +21,10 @@ Route::middleware(['hasPermission:admin.dashboard'])->group(function () {
   Route::get('/admin', 'website\WebsiteController@dashboard')->name('admin');
 
   Route::middleware(['hasPermission:admin.beatmap.manage'])->group(function () {
-    Route::get('/add-beatmap', 'website\WebsiteController@addBeatmap')->middleware('hasPermission:admin.beatmap.manage.add')->name('add-beatmap');
-    Route::post('/add-beatmap', "BeatmapController@registerUploadedBeatmap")->middleware('hasPermission:admin.beatmap.manage.add')->name('add-beatmap');
+    Route::get('/admin/beatmaps/import', 'website\WebsiteController@addBeatmap')->middleware('hasPermission:admin.beatmap.manage.add')->name('beatmaps.add');
+    Route::post('/admin/beatmaps/import', "BeatmapController@registerUploadedBeatmap")->middleware('hasPermission:admin.beatmap.manage.add')->name('beatmaps.add');
+
+    Route::get('/admin/beatmaps/manage', 'website\WebsiteController@manageBeatmap')->middleware('hasPermission:admin.beatmap.manage')->name('beatmaps.manage');
   });
 
   Route::middleware(['hasPermission:admin.plays.manage'])->group(function () {

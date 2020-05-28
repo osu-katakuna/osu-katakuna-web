@@ -176,11 +176,11 @@ class ReplayController extends Controller
       }
 
       if(count($errors) > 0) {
-        return redirect('/import-replays')
+        return redirect('import-replays')
                     ->withErrors($errors);
       }
 
-      return view("website.import-replays", ["message" => "Score(s) imported successfully!"]);
+      return view("admin.import-replays", ["message" => "Score(s) imported successfully!"]);
     }
 
 

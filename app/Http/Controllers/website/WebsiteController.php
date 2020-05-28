@@ -24,6 +24,10 @@ class WebsiteController extends Controller
       return view('admin.beatmap-add');
     }
 
+    function manageBeatmap(Request $req) {
+      return view('admin.beatmap-manage');
+    }
+
     function importReplays(Request $req) {
       return view('admin.import-replays');
     }

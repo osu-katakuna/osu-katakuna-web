@@ -484,7 +484,7 @@ class BeatmapController extends Controller
 
     function registerUploadedBeatmap(Request $req) {
       if(!file_exists("/katakuna/beatmap-calculator/index.js")) {
-        return redirect('/add-beatmap')
+        return redirect('beatmaps.add')
                     ->withErrors(["Katakuna Beatmap Calculator is not installed! Cannot continue."]);
       }
 
@@ -493,13 +493,13 @@ class BeatmapController extends Controller
       ]);
 
       if ($validator->fails()) {
-        return redirect('/add-beatmap')
+        return redirect('beatmaps.add')
                     ->withErrors($validator);
       }
 
       $beatmap = $req->file("BeatmapFile");
       BeatmapController::UploadedBeatmapRegister($beatmap->path());
 
-      return view("website.beatmap-add", ["message" => "Beatmap registered successfully!"]);
+      return view("admin.beatmap-add", ["message" => "Beatmap registered successfully!"]);
     }
 }
