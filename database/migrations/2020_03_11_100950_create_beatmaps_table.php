@@ -16,20 +16,19 @@ class CreateBeatmapsTable extends Migration
         Schema::create('beatmaps', function (Blueprint $table) {
             $table->id();
             $table->date("sync_date");
-            $table->string("title");
+            $table->string("title")->index();
             $table->string("title_unicode")->nullable();
-            $table->string("artist");
+            $table->string("artist")->index();
             $table->string("artist_unicode")->nullable();
             $table->integer("status");
             $table->bigInteger("creator_id")->unsigned()->nullable();
             $table->string("creator");
-            $table->longText("tags");
+            $table->string("tags")->index();
             $table->string("source");
-            $table->string("filename")->nullable();
+            $table->string("filename")->nullable()->index();
             $table->bigInteger("genre_id")->unsigned();
             $table->timestamps();
 
-            $table->index(['title', 'artist', 'tags', 'filename']);
         });
     }
 
