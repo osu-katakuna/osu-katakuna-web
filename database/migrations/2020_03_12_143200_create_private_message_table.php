@@ -21,8 +21,8 @@ class CreatePrivateMessageTable extends Migration
             $table->boolean("seen");
             $table->timestamps();
 
-            $table->foreign("from_user_id")->references('id')->on('users');
-            $table->foreign("to_user_id")->references('id')->on('users');
+            $table->foreign("from_user_id")->references('id')->on('users')->onDelete("cascade");
+            $table->foreign("to_user_id")->references('id')->on('users')->onDelete("cascade");
         });
     }
 

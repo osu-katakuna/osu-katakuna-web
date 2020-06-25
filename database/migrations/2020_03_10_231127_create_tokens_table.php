@@ -19,7 +19,7 @@ class CreateTokensTable extends Migration
             $table->string("ip");
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");
         });
     }
 

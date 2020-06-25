@@ -97,6 +97,7 @@ class ScoreController extends Controller
       $i = 1;
       foreach($plays as $play) {
         if($play->player == NULL) continue;
+        if($play->player->banned) continue;
         $replayID = $play->id;
         $userID = $play->player->id;
       	$playerName = $play->player->username;

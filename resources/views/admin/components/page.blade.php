@@ -20,7 +20,7 @@
   @show
 </head>
 
-<body class="hold-transition sidebar-mini layout-footer-fixed">
+<body class="hold-transition sidebar-mini layout-footer-fixed layout-fixed">
   <div class="wrapper">
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       @include("admin.components.navbar")

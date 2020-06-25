@@ -1,0 +1,28 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.forum-poll-container {
+  @_top: forum-poll-container;
+
+  &__content {
+    display: none;
+
+    &--edit {
+      .@{_top}[data-edit="1"] & {
+        display: block;
+      }
+    }
+
+    &--form {
+      .@{_top}[data-page=form][data-edit="0"] & {
+        display: block;
+      }
+    }
+
+    &--results {
+      .@{_top}[data-page=results][data-edit="0"] & {
+        display: block;
+      }
+    }
+  }
+}

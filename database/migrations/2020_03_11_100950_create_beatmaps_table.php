@@ -28,6 +28,8 @@ class CreateBeatmapsTable extends Migration
             $table->string("filename")->nullable();
             $table->bigInteger("genre_id")->unsigned();
             $table->timestamps();
+
+            $table->index(['title', 'artist', 'tags', 'filename']);
         });
     }
 

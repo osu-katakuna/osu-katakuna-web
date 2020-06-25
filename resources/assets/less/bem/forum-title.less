@@ -1,0 +1,58 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.forum-title {
+  @_top: forum-title;
+  @_stripe-distance: 10px;
+  flex: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: 80%;
+    width: 3px;
+    background-color: @osu-colour-p;
+    top: 15%;
+    left: -@_stripe-distance;
+    border-radius: 10000px;
+    display: none;
+  }
+
+  @media @desktop {
+    &::before {
+      display: block;
+    }
+  }
+
+  &--forum {
+    margin: @gutter-v2;
+
+    @media @desktop {
+      margin: 20px @gutter-v2-desktop;
+    }
+  }
+
+  &__description {
+    color: @osu-colour-c2;
+    margin: 0;
+    padding: 0;
+    font-size: @font-size--normal;
+
+    @media @desktop {
+      font-size: @font-size--title-small;
+    }
+  }
+
+  &__name {
+    color: @osu-colour-c1;
+    font-style: normal;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    font-size: @font-size--title-small-4;
+
+    @media @desktop {
+      font-size: @font-size--new-header-title;
+    }
+  }
+}

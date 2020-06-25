@@ -1,0 +1,126 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.user-action-button {
+  @_top: user-action-button;
+
+  .reset-input();
+  .link-plain();
+  .link-white();
+  .center-content();
+  display: flex;
+  border-radius: 10px;
+  height: 20px;
+  width: 50px;
+  text-align: center;
+
+  font-size: @font-size--title-small;
+  background: @osu-colour-b6;
+
+  &:hover {
+    background: @osu-colour-b5;
+  }
+
+  &--message {
+    &:hover {
+      background: fade(@blue-darker, 70%);
+    }
+  }
+
+  &--mutual {
+    background: fade(@pink, 70%);
+    &:hover {
+      background: fade(lighten(@pink, 5%), 70%);
+    }
+  }
+
+  &--friend {
+    background: fade(@green, 70%);
+    &:hover {
+      background: fade(lighten(@green, 5%), 70%);
+    }
+  }
+
+  &--dynamic {
+    height: 1.67em;
+    width: $height * 1.5;
+    font-size: 0.6em;
+  }
+
+  &--profile-page {
+    .default-text-shadow();
+    min-width: 80px;
+    width: auto;
+    height: 100%;
+    padding: 10px 10px;
+    border-radius: 10000px;
+    font-weight: bold;
+  }
+
+  &--quick-search {
+    height: 100%;
+    width: 30px;
+    font-size: 8px; // icon size
+    border-radius: 10000px;
+  }
+
+  &--right-margin {
+    margin-right: 10px;
+  }
+
+  &--user-card {
+    height: @user-card-icon-size;
+    width: @user-card-icon-size;
+    font-size: @user-card-icon-size / 2;
+    border-radius: 50%;
+  }
+
+  &--user-list {
+    height: @user-list-icon-size;
+    width: ($height * 1.5);
+    font-size: ($height * 0.6);
+  }
+
+  &[disabled] {
+    pointer-events: none;
+  }
+
+  &__counter {
+    padding-right: 10px;
+  }
+
+  &__icon {
+    .full-size();
+    .center-content();
+    will-change: opacity;
+
+    .user-card & {
+      will-change: unset;
+    }
+
+    &--hover-hidden {
+      opacity: 1;
+
+      .@{_top}:hover & {
+        opacity: 0;
+      }
+    }
+
+    &--hover-visible {
+      opacity: 0;
+
+      .@{_top}:hover & {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__icon-container {
+    .center-content();
+    width: 50px;
+
+    .@{_top}--quick-search & {
+      width: 100%;
+    }
+  }
+}

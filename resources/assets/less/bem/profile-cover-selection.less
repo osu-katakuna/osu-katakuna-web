@@ -1,0 +1,28 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.profile-cover-selection {
+  .reset-input();
+  flex: none;
+  width: 100%;
+  padding-bottom: 100%;
+
+  cursor: pointer;
+  background-color: fade(#000, 25%);
+  background-size: cover;
+  background-position: center;
+
+  &--custom {
+    padding-bottom: (640 / 2400 * 100%); // matches cover size
+  }
+
+  &__selected {
+    .default-text-shadow();
+    color: #fff;
+    font-size: 24px; // icon size
+
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+  }
+}

@@ -15,9 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/leaderboard/{StrGameMode}', "API\LeaderboardController@get");
-Route::get('/role/test', function() {
-  dd(\App\User::find(1000)->hasPermission("katakuna.test"), \App\User::find(1001)->hasPermission("katakuna.test"));
-});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

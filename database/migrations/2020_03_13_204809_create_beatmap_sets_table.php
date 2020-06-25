@@ -33,6 +33,7 @@ class CreateBeatmapSetsTable extends Migration
             $table->string("filename")->nullable();
 
             $table->foreign("beatmap_id")->references("id")->on("beatmaps");
+            $table->index(['beatmap_id', 'md5', 'filename', 'name']);
         });
     }
 

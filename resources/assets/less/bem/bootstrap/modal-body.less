@@ -1,0 +1,71 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.modal-body {
+  padding: 10px;
+  border-radius: 0 0 5px 5px;
+
+  // Modifiers
+  &--no-rounding {
+    border-radius: 0;
+  }
+
+  &--compartimentalized {
+    display: flex;
+    padding: 0;
+  }
+
+  &--user-dropdown {
+    background-color: #fff;
+  }
+
+  &--page {
+    .default-border-radius();
+    background-color: @osu-colour-b2;
+    color: @osu-colour-c1;
+  }
+
+  // Elements
+  &__compartment {
+    display: flex;
+    padding: 10px;
+
+    &--left {
+      border-radius: 0 0 0 5px;
+      flex-flow: column nowrap;
+      flex: 1 0 auto;
+    }
+
+    &--right {
+      background-color: #eee;
+      border-radius: 0 0 5px;
+      flex: none;
+      justify-content: flex-end;
+      padding: 0;
+    }
+  }
+
+  &__form {
+    align-items: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px 0 0 0;
+
+    @media (min-width: @screen-sm-min) {
+      flex-wrap: nowrap;
+    }
+  }
+
+  &__paragraph {
+    display: block;
+    font-size: 12px;
+    margin: 10px 0 0 0;
+  }
+
+  &__title {
+    color: @osu-colour-c1;
+    font-size: 18px;
+    font-style: normal;
+    margin: 10px 0;
+  }
+}

@@ -1,0 +1,125 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.contest-list-item {
+  @_top: contest-list-item;
+
+  display: block;
+  color: white;
+  height: 70px;
+  margin: 5px 0;
+  background-color: @osu-colour-b4;
+  .default-box-shadow();
+
+  transition: 0.1s ease-in-out;
+
+  border-right: 5px solid @osu-colour-b4;
+
+  @media @mobile {
+    height: 90px;
+  }
+
+  &:active, &:focus, &:hover {
+    color: white;
+    text-decoration: none;
+  }
+
+  &:hover {
+    @media @desktop {
+      .@{_top}__image {
+        width: 160px;
+      }
+    }
+    background-color: @osu-colour-b3;
+    border-color: @osu-colour-b3;
+  }
+
+  &--entry {
+    border-color: @pink;
+    &:hover {
+      border-color: lighten(@pink, 5%);
+    }
+  }
+
+  &--hidden {
+    opacity: 0.5;
+  }
+
+  &--results {
+    border-color: @green;
+    &:hover {
+      border-color: lighten(@green, 5%);
+    }
+  }
+
+  &--voting {
+    border-color: @blue;
+    &:hover {
+      border-color: lighten(@blue, 5%);
+    }
+  }
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__date {
+    font-size: 12px;
+    @media @mobile {
+      font-size: 10px;
+    }
+    color: @osu-colour-f1;
+  }
+
+  &__image {
+    transition: 0.2s ease-in-out;
+    width: 80px;
+    height: 70px;
+    background-size: cover;
+    background-position: center center;
+    float: left;
+    @media @mobile {
+      width: 50px;
+      height: 90px;
+    }
+  }
+
+  &__left-content {
+    float: left;
+    padding: 15px;
+    padding-top: 10px;
+    overflow: hidden;
+    @media @mobile {
+      padding-right: 0;
+    }
+  }
+
+  &__name {
+    font-size: 14px;
+    padding-bottom: 5px;
+    font-weight: bold;
+
+    @media @desktop {
+      font-size: @font-size--title-small-4;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+
+  &__right-content {
+    float: right;
+    padding: 10px;
+    flex-shrink: 0;
+  }
+
+  &__type {
+    color: @osu-colour-f1;
+    text-transform: capitalize;
+    font-size: 15px;
+    @media @mobile {
+      font-size: 13px;
+    }
+  }
+}

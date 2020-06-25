@@ -1,0 +1,128 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.artist-link-button {
+  @_top: artist-link-button;
+
+  .button-theme(@colour) {
+    .@{_top}__lightbar {
+      background: @colour;
+    }
+    .@{_top}__chevron {
+      color: @colour;
+    }
+
+    &:hover {
+      .@{_top}__lightbar {
+        background: lighten(@colour, 10%);
+        box-shadow: 0 0 5px fade(lighten(@colour, 15%), 100%);
+      }
+      .@{_top}__chevron {
+        color: lighten(@colour, 10%);
+        text-shadow: 0 0 10px fade(lighten(@colour, 15%), 100%);
+      }
+    }
+  }
+
+  align-items: center;
+  background: @osu-colour-b4;
+  border-radius: 4px;
+  color: white;
+  display: flex;
+  font-size: 16px;
+  height: 40px;
+  margin-bottom: 5px;
+  padding: 6px 10px;
+  user-select: none;
+
+  .default-text-shadow();
+  .default-box-shadow();
+  .button-theme(#fff);
+
+  transition: 0.1s ease-out;
+
+  &:hover, &:focus {
+    color: white;
+    text-decoration: none;
+  }
+
+  &:hover {
+    background: @osu-colour-b6;
+    .@{_top}__chevron {
+      right: -5px;
+    }
+  }
+
+  &__lightbar {
+    height: 100%;
+    margin-right: 15px;
+    width: 7px;
+    border-radius: 7px;
+    .default-box-shadow();
+    transition: 0.1s ease-out;
+  }
+
+  &__text {
+    font-weight: 600;
+    flex-basis: 100%;
+    text-align: left;
+    padding-left: 20px;
+  }
+
+  &__chevron {
+    right: 0;
+    font-size: 14px;
+    transition: 0.1s ease-out;
+  }
+
+  &--twitter {
+    .button-theme(@twitter-colour);
+  }
+
+  &--facebook {
+    .button-theme(@facebook-colour);
+  }
+
+  &--soundcloud {
+    .button-theme(@soundcloud-colour);
+  }
+
+  &--bandcamp {
+    .button-theme(@bandcamp-colour);
+  }
+
+  &--osu {
+    background-color: @pink-darker;
+
+    .@{_top}__lightbar {
+      background: black;
+    }
+    .@{_top}__chevron {
+      color: black;
+    }
+
+    &:hover {
+      background: lighten(@pink-darker, 5%);
+      .@{_top}__lightbar {
+        background: white;
+        box-shadow: 0 0 5px fade(lighten(white, 15%), 100%);
+      }
+      .@{_top}__chevron {
+        color: lighten(white, 10%);
+        text-shadow: 0 0 10px fade(lighten(white, 15%), 100%);
+      }
+    }
+  }
+
+  &--patreon {
+    .button-theme(@patreon-colour);
+  }
+
+  &--spotify {
+    .button-theme(@spotify-colour);
+  }
+
+  &--youtube {
+    .button-theme(@youtube-colour);
+  }
+}

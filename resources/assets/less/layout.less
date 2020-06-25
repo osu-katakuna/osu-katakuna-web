@@ -1,0 +1,95 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+// main: compiled.less
+@import "app";
+
+*, ::before, ::after {
+  position: relative;
+  box-sizing: border-box;
+}
+
+::selection {
+  color: #fff;
+  background-color: @osu-colour-h2;
+}
+
+::placeholder {
+  color: inherit;
+  opacity: 0.54; // stolen from firefox
+}
+
+:root {
+  --font-default: @font-default;
+  --font-default-vi: @font-default-vi;
+  --font-default-zh: @font-default-zh;
+  --font-default-zh-tw: @font-default-zh-tw;
+  --font-content: @font-content;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  .default-font();
+  // no overlap between rightmost side and scrollbar
+  -ms-overflow-style: scrollbar;
+  // prevent moving navbar
+  overflow-y: scroll;
+  // fix tooltip positioning on edge when combined with overflow-y scroll above
+  position: static;
+}
+
+.content {
+  &--forum-topic-preview {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 5px;
+
+    @media @desktop {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.content-extra {
+  box-shadow: inset 0 2px 4px #333;
+  margin-top: 10px;
+  margin-bottom: -30px;
+  width: 100%;
+  padding-top: 20px;
+  background-color: fade(#000, 75%);
+}
+
+.header-row {
+  background-size: cover;
+  background-position: center;
+}
+
+#popup-container {
+  backface-visibility: hidden;
+  position: fixed;
+  width: 100%;
+  top: 155px;
+  z-index: 9999;
+
+  .alert {
+    border: none;
+    .default-box-shadow();
+  }
+
+  .popup-text {
+    vertical-align: middle;
+    font-weight: 700;
+  }
+}
+
+.alert-inline {
+  margin: 20px;
+  border: none;
+  padding: 15px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  .default-box-shadow();
+}

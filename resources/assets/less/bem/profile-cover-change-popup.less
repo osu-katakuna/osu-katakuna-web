@@ -1,0 +1,65 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.profile-cover-change-popup {
+  .default-border-radius();
+  .default-box-shadow();
+
+  position: absolute;
+  top: 0;
+  right: 100%;
+
+  width: 300px;
+
+  background: @osu-colour-b6;
+  color: #fff;
+  z-index: @z-index--profile-page-cover-selector;
+
+  font-size: @font-size--small;
+  text-align: center;
+
+  &__defaults {
+    display: flex;
+    flex-wrap: wrap;
+
+    margin: -2px;
+    padding: 10px;
+  }
+
+  &__selection {
+    padding: 2px;
+    width: (100% / 3);
+    display: flex;
+  }
+
+  &__selections-info {
+    width: 100%;
+    padding: 0;
+    margin: 10px 0 0;
+  }
+
+  &__drop-overlay {
+    .default-border-radius();
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #fff;
+    font-size: 24px;
+    padding: 20px;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+
+    background-color: fade(#000, 50%);
+
+    &--hover {
+      background-color: fade(#000, 70%);
+    }
+  }
+}

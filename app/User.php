@@ -20,6 +20,10 @@ class User extends Authenticatable
       return $this->hasMany("App\UserPlayBeatmap", "user_id");
     }
 
+    function clients() {
+      return $this->hasMany("App\ClientToken", "user_id");
+    }
+
     function role() {
       return $this->belongsTo("App\UserRole", "role_id");
     }
@@ -43,9 +47,9 @@ class User extends Authenticatable
       $users = User::where("bot", "=", "0")->get();
       $scores = array();
 
-      // 1. get all users total score.
+      // 1. get all users total score. (BOI DO SORTING BY PP fuck SCORE)
       foreach($users as $user) {
-        $scores[$user->id] = $user->totalScore($gameMode);
+        $scores[$user->id] = $user->pp($gameMode);
       }
 
       // 2. sort the scores.
@@ -114,9 +118,26 @@ class User extends Authenticatable
     }
 
     function pp($gameMode = 0) {
-      $pp = 0;
-      $maps = $this->played_scores;
+      if($this->banned) return 0;
 
+      // how to calculate Player PP:
+      // get all played scores
+      // get only last good score
+      // add to pp
+
+      $pp = 0;
+      $plays = $this->played_scores->where("gameMode", "=", $gameMode)->where("pass", "=", "1");
+      $sawMapID = array();
+
+      foreach($plays as $play) {
+        if($play->beatmap_set == NULL) continue; // maybe that beatmap doesn't exist anymore oof
+        if(!in_array($play->beatmap_set->id, $sawMapID)) {
+          array_push($sawMapID, $play->beatmap_set->id);
+
+          $best_play = $this->played_scores()->where("pass", "=", "1")->where("beatmapset_id", "=", $play->beatmap_set->id)->orderBy("score", "DESC")->get()->first();
+          $pp += $best_play->pp();
+        }
+      }
 
       return $pp;
     }
@@ -134,6 +155,6 @@ class User extends Authenticatable
     }
 
     function currentStats($gamemode = 0) {
-      return $this->stats()->where('gameMode', '=', $gamemode)->orderBy('created_at', 'DESC')->get()->first();
+      return $this->stats()->where('gameMode', '=', $gamemode)->latest()->limit(1)->first();
     }
 }

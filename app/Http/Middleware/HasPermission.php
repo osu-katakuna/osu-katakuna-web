@@ -16,13 +16,27 @@ class HasPermission
     public function handle($request, Closure $next, $perm)
     {
       if (!auth()->check()) {
-          return redirect('login')->with('redirect', $request->url());
+          if(!$request->expectsJson()) {
+            return redirect('login')->with('redirect', $request->fullUrl());
+          }
+
+          return \Response::json([
+            "error" => true,
+            "message" => "Invalid session."
+          ], 401);
       }
 
       if (auth()->user()->hasPermission($perm)) {
           return $next($request);
       }
 
-      abort(403, "You don't have the '$perm' permission to access this page.");
+      if(!$request->expectsJson()) {
+        abort(403, "You don't have the '$perm' permission to access this page.");
+      }
+
+      return \Response::json([
+        "error" => true,
+        "message" => "You don't have the '$perm' permission."
+      ], 403);
     }
 }

@@ -30,9 +30,17 @@ class LeaderboardController extends Controller
 
       if($currentGameMode != -1) {
         $scores = array();
+        $users = array();
+        $stats = array();
 
         foreach(User::where("bot", "=", "0")->get() as $user) {
-          $scores[$user->id] = $user->totalScore($currentGameMode);
+          $stat = $user->currentStats($currentGameMode);
+          if($stat == NULL) {
+            continue;
+          }
+          $scores[$user->id] = $stat->pp;
+          $users[$user->id] = $user;
+          $stats[$user->id] = $stat;
         }
 
         arsort($scores);
@@ -40,16 +48,17 @@ class LeaderboardController extends Controller
         $rank = 1;
 
         foreach($scores as $i => $s) {
-          $user = User::find($i);
+          $user = $users[$i];
+          $stat = $stats[$i];
 
           array_push($leaderboard, [
             "id" => $user->id,
             "rank" => $rank,
             "username" => $user->username,
-            "pp" => $user->pp($currentGameMode),
-            "score" => $user->totalScore($currentGameMode),
-            "accuracy" => $user->accuracy($currentGameMode),
-            "plays" => $user->playCount($currentGameMode)
+            "pp" => $stat->pp,
+            "score" => $stat->score,
+            "accuracy" => $stat->accuracy,
+            "plays" => $stat->play_count
           ]);
 
           $rank++;
@@ -60,9 +69,17 @@ class LeaderboardController extends Controller
 
           $leaderboard[$gamemode] = array();
           $scores = array();
+          $users = array();
+          $stats = array();
 
           foreach(User::where("bot", "=", "0")->get() as $user) {
-            $scores[$user->id] = $user->totalScore($id);
+            $stat = $user->currentStats($id);
+            if($stat == NULL) {
+              continue;
+            }
+            $scores[$user->id] = $stat->pp;
+            $users[$user->id] = $user;
+            $stats[$user->id] = $stat;
           }
 
           arsort($scores);
@@ -70,16 +87,17 @@ class LeaderboardController extends Controller
           $rank = 1;
 
           foreach($scores as $i => $s) {
-            $user = User::find($i);
+            $user = $users[$i];
+            $stat = $stats[$i];
 
             array_push($leaderboard[$gamemode], [
               "id" => $user->id,
               "rank" => $rank,
               "username" => $user->username,
-              "pp" => $user->pp($id),
-              "score" => $user->totalScore($id),
-              "accuracy" => $user->accuracy($id),
-              "plays" => $user->playCount($id)
+              "pp" => $stat->pp,
+              "score" => $stat->score,
+              "accuracy" => $stat->accuracy,
+              "plays" => $stat->play_count
             ]);
 
             $rank++;

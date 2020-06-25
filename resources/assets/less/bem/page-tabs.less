@@ -1,0 +1,53 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.page-tabs {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 1px;
+
+  &::after {
+    content: " ";
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    width: 100%;
+    height: 1px;
+
+    background-image:linear-gradient(to left, transparent 10%, @osu-colour-b1 50%, transparent 90%);
+  }
+
+  &__tab {
+    margin: 0 10px;
+    padding: 5px 0;
+    border-bottom: 5px solid transparent;
+
+    font-size: 14px;
+    color: white;
+
+    cursor: pointer;
+
+    &:hover, &:active, &:focus {
+      color: @osu-colour-l1;
+      text-decoration: none;
+    }
+
+    &--active {
+      font-weight: 700;
+      border-bottom-color: @osu-colour-h1;
+    }
+
+    &--disabled {
+      color: #ccc;
+      cursor: default;
+
+      &:hover, &:active, &:focus {
+        color: #ccc;
+        text-decoration: none;
+      }
+    }
+  }
+}

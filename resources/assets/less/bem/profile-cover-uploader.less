@@ -1,0 +1,32 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.profile-cover-uploader {
+  border-top: 1px solid @osu-colour-b5;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+
+  &__button {
+    margin-top: 10px;
+    text-transform: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__info {
+    padding: 10px;
+    margin-bottom: -10px;
+  }
+
+  &__info-entry {
+    margin-bottom: 5px;
+
+    // TODO: remove once default link style becomes... default
+    a {
+      .link-default();
+    }
+  }
+}

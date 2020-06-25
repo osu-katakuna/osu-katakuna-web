@@ -20,6 +20,8 @@ class WebsiteController extends Controller
       return view('website.login');
     }
 
+    // admin
+
     function addBeatmap(Request $req) {
       return view('admin.beatmap-add');
     }
@@ -33,6 +35,10 @@ class WebsiteController extends Controller
     }
 
     function dashboard(Request $req) {
-      return view('admin.components.page');
+      return view('admin.dashboard');
+    }
+
+    function users(Request $req) {
+      return view('admin.users');
     }
 }

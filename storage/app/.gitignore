@@ -1,3 +1,6 @@
 *
 !public/
 !.gitignore
+!beatmaps
+!replays
+!seasonal

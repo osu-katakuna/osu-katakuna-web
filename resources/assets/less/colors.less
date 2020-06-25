@@ -1,0 +1,146 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+@purple-lighter: #eeeeff;
+@purple-light: #aa88ff;
+@purple: #8866ee;
+@purple-dark: #6644cc;
+@purple-darker: #441188;
+
+@pink-lighter: #ffddee;
+@pink-light: #ff99cc;
+@pink: #ff66aa;
+@pink-dark: #cc5288;
+@pink-darker: #bb1177;
+
+@blue-lighter: #ddffff;
+@blue-light: #99eeff;
+@blue: #66ccff;
+@blue-dark: #44aadd;
+@blue-darker: #2299bb;
+
+@yellow-lighter: #ffffdd;
+@yellow-light: #ffdd55;
+@yellow: #ffcc22;
+@yellow-dark: #eeaa00;
+@yellow-darker: #cc6600;
+
+@green-lighter: #eeffcc;
+@green-light: #b3d944;
+@green: #88b300;
+@green-dark: #668800;
+@green-darker: #445500;
+
+@red-lighter: #FFEDED;
+@red-light: #ED7887;
+@red: #ED1221;
+@red-dark: #BA0011;
+@red-darker: #870000;
+
+// https://about.twitter.com/press/brand-assets
+@twitter-colour: #1da1f2;
+// used the blue from the top bar on facebook, https://www.facebookbrand.com is useless and doesn't list colors
+@facebook-colour: #3b5998;
+// .sc-orange on https://soundcloud.com ¯\_(ツ)_/¯
+@soundcloud-colour: #f50;
+// bandcamp "green" from the provided buttons at https://bandcamp.com/buttons
+@bandcamp-colour: #61929c;
+// spotify "Green*" from https://developer.spotify.com/design/
+@spotify-colour: #1DB954;
+// patreon orange from the provided logos at https://www.patreon.com/toolbox/media
+@patreon-colour: #e6461a;
+// youtube red from https://www.youtube.com/yt/brand/ (yes it's supposed to be rgb(255,0,0) - my poor eyes...)
+@youtube-colour: #ff0000;
+
+// just for reference, from bootstrap's variables.less
+// @gray-base:              #000;
+// @gray-darker:            lighten(@gray-base, 13.5%); // #222
+// @gray-dark:              lighten(@gray-base, 20%);   // #333
+// @gray:                   lighten(@gray-base, 33.5%); // #555
+// @gray-light:             lighten(@gray-base, 46.7%); // #777
+// @gray-lighter:           lighten(@gray-base, 93.5%); // #eee
+
+// TODO: remove after remaining white-background sections have been updated (forum, store)
+// osu!palette 2017(?)
+@gray: #262626;
+@gray-dark: #1a1a1a;
+@gray-darker: #0e0e0e;
+@light-gray: #f5f5f5;
+
+// osu!palette 2019v2-final-copy-last-FINAL
+// The default hue is osu! pink (333) and is injected into the body via master.blade.php as var(--base-hue) within :root
+// The section-to-colour mapping is done via section_to_hue_map() in helpers.php
+@osu-colour-p: hsl(var(--base-hue), 100%, 50%);
+@osu-colour-h1: hsl(var(--base-hue), 100%, 70%);
+@osu-colour-h2: hsl(var(--base-hue), 50%, 45%);
+@osu-colour-c1: hsl(var(--base-hue), 40%, 100%);
+@osu-colour-c2: hsl(var(--base-hue), 40%, 90%);
+@osu-colour-l1: hsl(var(--base-hue), 40%, 80%);
+@osu-colour-l2: hsl(var(--base-hue), 40%, 75%);
+@osu-colour-l3: hsl(var(--base-hue), 40%, 70%);
+@osu-colour-l4: hsl(var(--base-hue), 40%, 50%);
+@osu-colour-d1: hsl(var(--base-hue), 20%, 35%);
+@osu-colour-d2: hsl(var(--base-hue), 20%, 30%);
+@osu-colour-d3: hsl(var(--base-hue), 20%, 25%);
+@osu-colour-d4: hsl(var(--base-hue), 20%, 20%);
+@osu-colour-d5: hsl(var(--base-hue), 20%, 15%);
+@osu-colour-d6: hsl(var(--base-hue), 20%, 10%);
+@osu-colour-f1: hsl(var(--base-hue), 10%, 60%);
+@osu-colour-b1: hsl(var(--base-hue), 10%, 40%);
+@osu-colour-b2: hsl(var(--base-hue), 10%, 30%);
+@osu-colour-b3: hsl(var(--base-hue), 10%, 25%);
+@osu-colour-b4: hsl(var(--base-hue), 10%, 20%);
+@osu-colour-b5: hsl(var(--base-hue), 10%, 15%);
+@osu-colour-b6: hsl(var(--base-hue), 10%, 10%);
+
+//
+// "Basic" Colour Theme (as of 2019)
+//
+
+// osu!Pink
+@osu-colour-pink-hue: 333;
+@osu-colour-pink-1: hsl(@osu-colour-pink-hue, 100%, 70%);
+@osu-colour-pink-2: hsl(@osu-colour-pink-hue, 80%, 60%);
+@osu-colour-pink-3: hsl(@osu-colour-pink-hue, 60%, 50%);
+// Purple
+@osu-colour-purple-hue: 255;
+@osu-colour-purple-1: hsl(@osu-colour-purple-hue, 100%, 70%);
+@osu-colour-purple-2: hsl(@osu-colour-purple-hue, 80%, 60%);
+@osu-colour-purple-3: hsl(@osu-colour-purple-hue, 60%, 50%);
+// Blue
+@osu-colour-blue-hue: 200;
+@osu-colour-blue-1: hsl(@osu-colour-blue-hue, 100%, 70%);
+@osu-colour-blue-2: hsl(@osu-colour-blue-hue, 80%, 60%);
+@osu-colour-blue-3: hsl(@osu-colour-blue-hue, 60%, 50%);
+// Green
+@osu-colour-green-hue: 125;
+@osu-colour-green-1: hsl(@osu-colour-green-hue, 100%, 70%);
+@osu-colour-green-2: hsl(@osu-colour-green-hue, 80%, 60%);
+@osu-colour-green-3: hsl(@osu-colour-green-hue, 60%, 50%);
+// Lime
+@osu-colour-lime-hue: 90;
+@osu-colour-lime-1: hsl(@osu-colour-lime-hue, 100%, 70%);
+@osu-colour-lime-2: hsl(@osu-colour-lime-hue, 80%, 60%);
+@osu-colour-lime-3: hsl(@osu-colour-lime-hue, 60%, 50%);
+// Orange
+@osu-colour-orange-hue: 45;
+@osu-colour-orange-1: hsl(@osu-colour-orange-hue, 100%, 70%);
+@osu-colour-orange-2: hsl(@osu-colour-orange-hue, 80%, 60%);
+@osu-colour-orange-3: hsl(@osu-colour-orange-hue, 60%, 50%);
+// Red
+@osu-colour-red-hue: 360;
+@osu-colour-red-1: hsl(@osu-colour-red-hue, 100%, 70%);
+@osu-colour-red-2: hsl(@osu-colour-red-hue, 80%, 60%);
+@osu-colour-red-3: hsl(@osu-colour-red-hue, 60%, 50%);
+
+@pink-text: @pink-dark;
+@green-text: @green-darker;
+@blue-text: @blue-darker;
+@yellow-text: @yellow-darker;
+@purple-text: @purple-darker;
+@gray-text: @gray-darker;
+
+@link-gray-light: #ccc;
+@link-gray-light-hover: #eee;
+
+@group-colour-default: #0087CA;

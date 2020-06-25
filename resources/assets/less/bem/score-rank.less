@@ -1,0 +1,42 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.score-rank {
+  width: 2em;
+  height: 1em;
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  .all(@rank, @prefix) {
+    &--@{rank} {
+      .bg(@prefix);
+    }
+  }
+
+  .bg(@filename) {
+    background-image: url("/images/badges/score-ranks-v2019/GradeSmall-@{filename}.svg?3");
+  }
+
+  .all(XH, "SS-Silver");
+  .all(X, "SS");
+  .all(SH, "S-Silver");
+  .all(S, "S");
+  .all(A, "A");
+  .all(B, "B");
+  .all(C, "C");
+  .all(D, "D");
+
+  &--full {
+    .full-size();
+  }
+
+  &--profile-page {
+    font-size: 22px;
+  }
+
+  &--tiny {
+    font-size: 14px;
+  }
+}

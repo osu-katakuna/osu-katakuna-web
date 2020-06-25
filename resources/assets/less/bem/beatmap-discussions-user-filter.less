@@ -1,0 +1,22 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.beatmap-discussions-user-filter {
+  .select-options(beatmap-discussions-user-filter);
+
+  @media @desktop {
+    width: 200px;
+  }
+
+  &__decoration {
+    color: #fff;
+  }
+
+  &__item {
+    color: var(--group-colour, @osu-colour-c1);
+
+    .link-hover({
+      color: var(--group-colour, @osu-colour-c1);
+    });
+  }
+}

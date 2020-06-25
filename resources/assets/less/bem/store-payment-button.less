@@ -1,0 +1,38 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.store-payment-button {
+  .reset-input();
+  @button-height: 150px;
+  @logo-width: 100px;
+
+  .default-box-shadow();
+  .default-border-radius();
+  display: flex;
+  align-items: center;
+  text-align: center;
+  height: @button-height;
+  width: 100%;
+  background-color: @osu-colour-c1;
+  background-position: center center;
+  background-size: @logo-width;
+  background-repeat: no-repeat;
+  cursor: pointer;
+
+  &:hover {
+    .default-box-shadow();
+    box-shadow: 0 0 0 3px @osu-colour-l4;
+  }
+
+  &--centili {
+    background-image: url(/images/store/ycoins.png);
+  }
+
+  &--paypal {
+    background-image: url(/images/store/paypal.png);
+  }
+
+  &--xsolla {
+    background-image: url(/images/store/xsolla.png);
+  }
+}

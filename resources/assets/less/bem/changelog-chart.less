@@ -1,0 +1,112 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.changelog-chart {
+  .stream-colors(@stream) {
+    @color-name: "changelog-stream--@{stream}";
+    @color: @@color-name;
+
+    .color(@stream, @color);
+    .color(~"@{stream}-build-0", @color);
+    .color(~"@{stream}-build-1", lighten(@color, 10%));
+    .color(~"@{stream}-build-2", lighten(@color, 20%));
+    .color(~"@{stream}-build-3", lighten(@color, 30%));
+    .color(~"@{stream}-build-4", lighten(@color, 40%));
+    .color(~"@{stream}-build-5", lighten(@color, 50%));
+    .color(~"@{stream}-build-6", lighten(@color, 60%));
+  }
+
+  height: 100px;
+
+  &__area {
+    .color(@modifier, @color) {
+      &--@{modifier} {
+        fill: @color;
+        stroke: @color;
+      }
+    }
+
+    .stream-colors(stable);
+    .stream-colors(stable-fallback);
+    .stream-colors(cutting-edge);
+    .stream-colors(beta);
+    .stream-colors(lazer);
+    .stream-colors(lazer-experimental);
+  }
+
+  &__hover-area {
+    fill: none;
+    pointer-events: all;
+  }
+
+  &__tooltip-area {
+    display: flex;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    pointer-events: none;
+  }
+
+  &__tooltip-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+  }
+
+  &__tooltip {
+    .default-border-radius;
+    background: fade(#000000, 50%);
+
+    padding: 5px 8px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    text-align: center;
+  }
+
+  &__text {
+    .color(@modifier, @color) {
+      &--@{modifier} {
+        color: @color;
+      }
+    }
+
+    &--name {
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    &--user-count {
+      font-weight: 500;
+      font-size: 15px;
+      color: #ffffff;
+    }
+
+    &--date {
+      font-weight: 700;
+      font-size: 10px;
+      color: #ffffff;
+    }
+
+    .stream-colors(stable);
+    .stream-colors(stable-fallback);
+    .stream-colors(cutting-edge);
+    .stream-colors(beta);
+    .stream-colors(lazer);
+    .stream-colors(lazer-experimental);
+  }
+
+  &__tooltip-line {
+    width: 1px;
+    flex-grow: 1;
+
+    background-color: #ffffff;
+  }
+}

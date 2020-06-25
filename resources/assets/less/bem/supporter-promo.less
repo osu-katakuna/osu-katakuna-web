@@ -1,0 +1,105 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.supporter-promo {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+  align-items: center;
+  padding: 20px 60px;
+
+  @media @desktop {
+    flex-direction: row;
+    align-items: stretch;
+    padding: 0 75px;
+    margin: 20px 0;
+    height: 200px;
+  }
+
+  background-color: fade(#000, 30%);
+
+  border-radius: @border-radius-large;
+  .default-box-shadow;
+
+  &__text-box {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    @media @desktop {
+     justify-content: center;
+     padding-right: 50px;
+     height: 100%;
+    }
+
+    @media @mobile {
+      text-align: center;
+    }
+  }
+
+  &__heading {
+    font-size: @font-size--large;
+    font-weight: 300;
+    color: #fff;
+    margin: 0 0 20px;
+  }
+
+  &__heart {
+    .at2x-simple('/images/badges/heart.png');
+    .circle(75px);
+    background-size: 75px 75px;
+
+    margin-top: 98px;
+
+    @media @desktop {
+      margin-top: 70px;
+    }
+
+    box-shadow: 0 0 10px 3px @pink;
+  }
+
+  &__pippi {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .at2x-simple('/images/layout/pippi.png');
+
+    width: 164px;
+    height: 234px;
+
+    background-size: 164px 234px;
+
+    @media @desktop {
+      flex: none;
+      order: 1;
+      height: auto;
+      background-size: 164px;
+      background-position-y: -28px;
+    }
+  }
+
+  &__text {
+    font-size: @font-size--title-small;
+    color: @pink-lighter;
+    margin: 0;
+
+    & + & {
+      margin-top: 10px;
+    }
+
+    &--small {
+      font-size: @font-size--normal;
+    }
+  }
+
+  &__link {
+    .link-plain();
+    font-weight: 700;
+    color: @pink-dark;
+
+    &:hover, &:active {
+      color: #fff;
+    }
+  }
+}

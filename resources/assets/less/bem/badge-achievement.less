@@ -1,0 +1,72 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.badge-achievement {
+  @_top: badge-achievement;
+  @_recent-width: 55px;
+  @_big-width: 110px;
+  @_big-height: 118px;
+
+  text-align: center;
+  vertical-align: middle;
+
+  &--dynamic-height {
+    flex: none;
+    width: (1em * @_big-width / @_big-height );
+    height: 1em;
+  }
+
+  &--listing {
+    width: 70px;
+    margin: auto;
+  }
+
+  &--recent {
+    min-width: (@_recent-width + 10px);
+    width: 25%;
+    margin-bottom: 10px;
+  }
+
+  &--recent-activity {
+    height: 100%;
+  }
+
+  &__locked-bg {
+    .full-size();
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    .at2x-simple("/images/badges/user-achievements/blank.png");
+
+    &--big {
+      .at2x-simple("/images/badges/user-achievements/blank-big.png");
+      background-size: @_big-width @_big-height;
+    }
+  }
+
+  &__image {
+    max-width: 100%;
+
+    &--big {
+      width: @_big-width;
+      height: @_big-height;
+    }
+
+    .@{_top}--dynamic-height & {
+      vertical-align: baseline;
+    }
+
+    .@{_top}--recent & {
+      max-width: @_recent-width;
+    }
+
+    .@{_top}--recent-activity & {
+      height: 100%;
+    }
+
+    .@{_top}--locked & {
+      opacity: 0.25;
+      filter: saturate(0);
+    }
+  }
+}

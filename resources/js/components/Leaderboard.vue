@@ -1,5 +1,5 @@
 <template>
-<div>
+<fragment>
   <div v-if="error" class="alert alert-danger" role="alert">
     An unknown error has occured while getting the leaderboard from our server. If you believe this is a bug, then submit an issue here: <a href="https://github.com/osu-katakuna/osu-katakuna-web/issues/new" class="alert-link">GitHub</a>
   </div>
@@ -70,11 +70,14 @@
       </div>
     </div>
   </div>
-</div>
+</fragment>
 </template>
 
 <script>
+import { Fragment } from 'vue-fragment'
+
 export default {
+  components: { Fragment },
   data: () => ({
     leaderboard: [],
     gamemode: "standard",
@@ -165,6 +168,7 @@ export default {
   computed: {
     pageElements: function() {
       if (this.loading || this.leaderboard[this.gamemode] === undefined) return [];
+      if(this.currentPage >= this.pages) this.currentPage = this.pages;
       return this.leaderboard[this.gamemode].slice(this.maxElementsPerPage * (this.currentPage - 1), this.maxElementsPerPage * this.currentPage);
     },
     pageNumerotation: function() {

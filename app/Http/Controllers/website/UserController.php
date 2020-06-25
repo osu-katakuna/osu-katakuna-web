@@ -18,6 +18,14 @@ class UserController extends Controller
       ]);
     }
 
+    function userSpectate(Request $req, $id) {
+      if(!User::find($id)) return view("website.user-not-found");
+
+      return view("website.spectate", [
+        "user" => User::find($id)
+      ]);
+    }
+
     function login(Request $request) {
       $credentials = $request->only('username', 'password');
       $request->session()->keep(['redirect']);

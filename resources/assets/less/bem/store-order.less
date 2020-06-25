@@ -1,0 +1,89 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.store-order {
+  @store-order--status-cancelled: @gray-light;
+  @store-order--status-checkout: @yellow-darker;
+  @store-order--status-delivered: @green-dark;
+  @store-order--status-paid: @blue-dark;
+  @store-order--status-processing: @yellow-dark;
+  @store-order--status-shipped: @green-dark;
+
+  .default-box-shadow();
+  .default-border-radius();
+
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  background-color: @osu-colour-b4;
+
+  .colors(@status) {
+    @color-name: "store-order--status-@{status}";
+    @color: @@color-name;
+
+    &--status-@{status} {
+      &::before {
+        background-color: @color;
+      }
+
+      .store-order__status {
+        color: @color;
+      }
+    }
+  }
+
+  .colors(cancelled);
+  .colors(checkout);
+  .colors(delivered);
+  .colors(paid);
+  .colors(processing);
+  .colors(shipped);
+
+  &::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: @border-radius-base;
+    border-radius: @border-radius-base 0 0 @border-radius-base;
+  }
+
+  &__amount {
+    font-size: @font-size--title-small;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+
+    font-size: @font-size--large;
+    line-height: 1.5;
+  }
+
+  &__header-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  &__header-subtext {
+    font-size: @font-size--normal;
+  }
+
+  &__items {
+    list-style: none;
+    font-size: @font-size--normal;
+    margin: 10px 0;
+  }
+
+  &__item-quantity {
+    margin-left: 4px;
+    color: #ccc;
+  }
+}

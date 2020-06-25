@@ -1,0 +1,62 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.no-print, .no-print * {
+  @media print {
+    display: none !important;
+  }
+}
+
+.print-page-break {
+  @media print {
+    page-break-before: always;
+  }
+}
+
+.u-blackout-visible {
+  z-index: @z-index--blackout-visible !important;
+}
+
+.u-ellipsis-overflow {
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+}
+
+.u-ellipsis-overflow-desktop {
+  @media @desktop {
+    .u-ellipsis-overflow();
+  }
+}
+
+.u-fancy-scrollbar {
+  .fancy-scrollbar();
+}
+
+// so elements with anchors as subelements don't create stacking contexts
+// that block each other.
+.u-has-anchor {
+  position: static;
+
+  &--no-event {
+    pointer-events: none;
+  }
+}
+
+.u-hidden {
+  display: none !important;
+}
+
+.u-hide-by-height {
+  height: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+.u-nav-float {
+  z-index: @z-index--nav-float !important;
+}
+
+.u-full-size {
+  .full-size();
+}

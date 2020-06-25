@@ -1,0 +1,32 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.livestream-page {
+  .default-gutter-v2();
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: @osu-colour-b5;
+
+  &__header {
+    color: @osu-colour-l1;
+    font-size: @font-size--livestream-header;
+    margin: 0;
+  }
+
+  &__item {
+    margin: 10px;
+
+    width: calc(100% - 20px);
+
+    @media @desktop {
+      width: calc((100% / 2) - 20px);
+    }
+  }
+
+  &__items {
+    margin-left: -10px;
+    margin-right: -10px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

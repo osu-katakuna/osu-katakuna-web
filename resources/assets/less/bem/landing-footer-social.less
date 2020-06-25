@@ -1,0 +1,31 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.landing-footer-social {
+  .own-layer();
+  text-align: center;
+
+  &__icon {
+    .circle(40px);
+    .link-white();
+    .link-plain();
+    .center-content();
+    border: 3px solid #fff;
+    margin: 0 5px;
+    font-size: 16px;
+
+    &--support {
+      &:hover,
+      &:focus {
+        color: @pink;
+      }
+    }
+
+    &--twitter {
+      &:hover,
+      &:focus {
+        color: @twitter-colour;
+      }
+    }
+  }
+}

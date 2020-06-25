@@ -1,0 +1,20 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.comment-show-more {
+  @_top: comment-show-more;
+
+  display: block;
+  font-size: @font-size--normal;
+
+  &--top {
+    .default-gutter();
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  &__link {
+    .reset-input();
+    .link-default();
+  }
+}

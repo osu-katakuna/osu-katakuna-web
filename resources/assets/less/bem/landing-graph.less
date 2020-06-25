@@ -1,0 +1,24 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.landing-graph {
+  width: 100%;
+  height: 100%;
+
+  &__area {
+    fill: @pink-darker;
+  }
+
+  &__circle {
+    fill: none;
+    stroke-width: 2;
+    stroke: #fff;
+  }
+
+  &__text {
+    .default-text-shadow();
+    font-size: 10px;
+    fill: #fff;
+    pointer-events: none;
+  }
+}

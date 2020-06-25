@@ -1,0 +1,32 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.wiki-toc-list {
+  @_top: wiki-toc-list;
+
+  padding: 0 0 0 10px;
+  margin: 0 0 10px;
+  list-style: none;
+  font-size: @font-size--title-small-2;
+
+  &--top {
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  &__item {
+    .@{_top}--top > & {
+      margin-bottom: 5px;
+    }
+  }
+
+  &__link {
+    .link-plain();
+    display: inline-block;
+    margin-bottom: 2px;
+
+    &--small {
+      font-size: @font-size--normal;
+    }
+  }
+}

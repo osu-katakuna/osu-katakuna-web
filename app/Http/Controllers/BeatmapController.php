@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Http;
 
 class BeatmapController extends Controller
 {
@@ -102,6 +103,12 @@ class BeatmapController extends Controller
               $m->status = $map_data->status;
               $m->author = $map_data->author;
               $m->filename = $file['name'];
+              if(array_key_exists("aim", $map_data)) {
+                $m->aim = $map_data->aim;
+              }
+              if(array_key_exists("speed", $map_data)) {
+                $m->speed = $map_data->speed;
+              }
 
               $m->beatmap()->associate($_beatmap);
               $m->save();
@@ -264,6 +271,14 @@ class BeatmapController extends Controller
       }
     }
 
+    function gameModeToString($gameMode) {
+      if($gameMode == 0) return "standard";
+      if($gameMode == 1) return "taiko";
+      if($gameMode == 2) return "ctb";
+      if($gameMode == 3) return "mania";
+      if($gameMode == 4) return "standard [RELAX]";
+    }
+
     function submit_score(Request $req) {
       if (!isset($_POST['score']) || !isset($_POST['iv']) || !isset($_POST['pass']) || empty($_POST['score']) || empty($_POST['iv']) || empty($_POST['pass'])) {
     		return "error: beatmap";
@@ -324,12 +339,11 @@ class BeatmapController extends Controller
 
       if($last_good_play) {
         $beatmap_ranking->maxComboBefore = $last_good_play->maxCombo;
-        $beatmap_ranking->accuracyBefore = $req->get("osuver") >= "20200427" ? $last_good_play->accuracy() : $last_good_play->accuracy() * 100;
+        $beatmap_ranking->accuracyBefore = $last_good_play->accuracy() * 100;
         $beatmap_ranking->rankedScoreBefore = $last_good_play->score;
         $beatmap_ranking->totalScoreBefore = $last_good_play->score;
-        $beatmap_ranking->ppBefore = 0;
+        $beatmap_ranking->ppBefore = $last_good_play->pp();
       }
-      $beatmap_ranking->ppAfter = 0;
 
       $overall_ranking = new Chart();
       $overall_ranking->id = "overall";
@@ -337,11 +351,10 @@ class BeatmapController extends Controller
       $overall_ranking->username = $user->username;
       $overall_ranking->url = "https://osu.ppy.sh/u/" . $user->id;
       $overall_ranking->rankBefore = $user->currentRankingPosition($gameMode);
-      $overall_ranking->accuracyBefore = $req->get("osuver") <= "20200427" ? $user->accuracy($gameMode) / 100 : $user->accuracy($gameMode);
+      $overall_ranking->accuracyBefore = $user->accuracy($gameMode);
       $overall_ranking->rankedScoreBefore = $user->totalScore($gameMode);
       $overall_ranking->totalScoreBefore = $user->totalScore($gameMode);
-      $overall_ranking->ppBefore = 0;
-      $overall_ranking->ppAfter = 0;
+      $overall_ranking->ppBefore = $user->pp($gameMode);
 
       // this is how you do an achievement :D
 
@@ -374,66 +387,210 @@ class BeatmapController extends Controller
       $play->save();
 
       $overall_ranking->rankAfter = $user->currentRankingPosition($gameMode);
-      $overall_ranking->accuracyAfter = $req->get("osuver") <= "20200427" ? $user->accuracy($gameMode) / 100 : $user->accuracy($gameMode);
+      $overall_ranking->accuracyAfter = $user->accuracy($gameMode);
       $overall_ranking->rankedScoreAfter = $user->totalScore($gameMode);
       $overall_ranking->totalScoreAfter = $user->totalScore($gameMode);
       $overall_ranking->onlineScoreId = $play->id;
+      $overall_ranking->ppAfter = $user->pp($gameMode);
 
       $beatmap_ranking->onlineScoreId = $play->id;
       $beatmap_ranking->rankAfter = $bm->positionOfUser($user);
       $beatmap_ranking->totalScoreAfter = $play->score;
       $beatmap_ranking->rankedScoreAfter = $play->score;
-      $beatmap_ranking->accuracyAfter = $req->get("osuver") <= "20200427" ? $play->accuracy() : $play->accuracy() * 100;
+      $beatmap_ranking->accuracyAfter = $play->accuracy() * 100;
       if($beatmap_ranking->accuracyAfter - $beatmap_ranking->accuracyBefore == 0) {
         $beatmap_ranking->accuracyBefore = 0;
       }
       $beatmap_ranking->maxComboAfter = $play->maxCombo;
+      $beatmap_ranking->ppAfter = $play->pp();
 
-      if($beatmap_ranking->rankAfter == 1 && $pass) {
-        $mods_text = "";
-        if($mods != "0") {
-          $mods_text = " +";
-          $mods_text .= ($mods & OsuConsts::Autoplay) ? "AP" : "";
-          $mods_text .= ($mods & OsuConsts::HardRock) ? "HR" : "";
-          $mods_text .= ($mods & OsuConsts::NoFail) ? "NF" : "";
-          $mods_text .= ($mods & OsuConsts::SuddenDeath) ? "SD" : "";
-          $mods_text .= ($mods & OsuConsts::Perfect) ? "PF" : "";
-          $mods_text .= ($mods & OsuConsts::DoubleTime) ? "DT" : "";
-          $mods_text .= ($mods & OsuConsts::Nightcore) ? "NC" : "";
-          $mods_text .= ($mods & OsuConsts::Hidden) ? "HD" : "";
-          $mods_text .= ($mods & OsuConsts::Flashlight) ? "FL" : "";
-          $mods_text .= ($mods & OsuConsts::Relax) ? "RX" : "";
-          $mods_text .= ($mods & OsuConsts::Autoplay) ? "AP" : "";
-          $mods_text .= ($mods & OsuConsts::SpunOut) ? "SO" : "";
-          $mods_text .= ($mods & OsuConsts::Key1) ? "1K" : "";
-          $mods_text .= ($mods & OsuConsts::Key2) ? "2K" : "";
-          $mods_text .= ($mods & OsuConsts::Key3) ? "3K" : "";
-          $mods_text .= ($mods & OsuConsts::Key4) ? "4K" : "";
-          $mods_text .= ($mods & OsuConsts::Key5) ? "5K" : "";
-          $mods_text .= ($mods & OsuConsts::Key6) ? "6K" : "";
-          $mods_text .= ($mods & OsuConsts::Key7) ? "7K" : "";
-          $mods_text .= ($mods & OsuConsts::Key8) ? "8K" : "";
-          $mods_text .= ($mods & OsuConsts::Key9) ? "9K" : "";
-        }
+      $mods_text = "";
+      if($mods != "0") {
+        $mods_text = " +";
+        $mods_text .= ($mods & OsuConsts::Relax2) ? "AT" : "";
+        $mods_text .= ($mods & OsuConsts::HardRock) ? "HR" : "";
+        $mods_text .= ($mods & OsuConsts::NoFail) ? "NF" : "";
+        $mods_text .= ($mods & OsuConsts::SuddenDeath) ? "SD" : "";
+        $mods_text .= ($mods & OsuConsts::Perfect) ? "PF" : "";
+        $mods_text .= ($mods & OsuConsts::DoubleTime) ? "DT" : "";
+        $mods_text .= ($mods & OsuConsts::Nightcore) ? "NC" : "";
+        $mods_text .= ($mods & OsuConsts::Hidden) ? "HD" : "";
+        $mods_text .= ($mods & OsuConsts::Flashlight) ? "FL" : "";
+        $mods_text .= ($mods & OsuConsts::Relax) ? "RX" : "";
+        $mods_text .= ($mods & OsuConsts::Autoplay) ? "AP" : "";
+        $mods_text .= ($mods & OsuConsts::SpunOut) ? "SO" : "";
+        $mods_text .= ($mods & OsuConsts::Key1) ? "1K" : "";
+        $mods_text .= ($mods & OsuConsts::Key2) ? "2K" : "";
+        $mods_text .= ($mods & OsuConsts::Key3) ? "3K" : "";
+        $mods_text .= ($mods & OsuConsts::Key4) ? "4K" : "";
+        $mods_text .= ($mods & OsuConsts::Key5) ? "5K" : "";
+        $mods_text .= ($mods & OsuConsts::Key6) ? "6K" : "";
+        $mods_text .= ($mods & OsuConsts::Key7) ? "7K" : "";
+        $mods_text .= ($mods & OsuConsts::Key8) ? "8K" : "";
+        $mods_text .= ($mods & OsuConsts::Key9) ? "9K" : "";
+      }
 
+      if($beatmap_ranking->rankAfter == 1 && $pass && !$user->banned) {
         $data = "Action:SendMessageToChannel\n";
         $data .= "Channel:#announce\n";
         $data .= "User:KatakunaBot\n\n";
         $data .= $user->username . " has placed #1 on " . $bm->beatmap->artist . " - " . $bm->beatmap->title . "(" . $bm->beatmap->creator . ") [" . $bm->name . "]" . $mods_text . ".\n";
 
         file_put_contents("/var/spool/katakuna/" . Str::random(10), $data);
+
+        if(env("DISCORD_WEBHOOK_SCORES") !== NULL) {
+          Http::post(env("DISCORD_WEBHOOK_SCORES"), [
+              'embeds' => [
+                [
+                  "description" => $user->username . " has placed #1 on " . $bm->beatmap->artist . " - " . $bm->beatmap->title . "(" . $bm->beatmap->creator . ") [" . $bm->name . "]" . $mods_text . " in **osu!" . BeatmapController::gameModeToString($gameMode) . "** mode",
+                  "color" => 8513040,
+                  "footer" => [
+                      "text" => "submitted on katakuna!kodachi"
+                  ],
+                  "author" => [
+                      "name" => $user->username,
+                      "url" => route("user", ["id" => $user->id]),
+                      "icon_url" => env("AVATAR_SERVER") . "/" . $user->id
+                  ],
+                  "image" => [
+                      "url" => "https://a.sayobot.cn/beatmaps/" . $bm->beatmap->id . "/covers/cover.jpg"
+                  ],
+                  "fields" => [
+                    [
+                      "name" => "x300",
+                      "value" => $play->count300,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "x100",
+                      "value" => $play->count100,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "x50",
+                      "value" => $play->count50,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "Geki",
+                      "value" => $play->countGeki,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "Katu",
+                      "value" => $play->countKatu,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "Score",
+                      "value" => $play->score,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "Misses",
+                      "value" => $play->miss,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "Gained PP",
+                      "value" => $beatmap_ranking->ppAfter,
+                      "inline" => true
+                    ]
+                  ]
+                ]
+              ]
+          ]);
+        }
       }
 
-      \Artisan::call('schedule:run');
+      if($user->banned) {
+        if(env("DISCORD_WEBHOOK_AC") !== NULL) {
+          Http::post(env("DISCORD_WEBHOOK_AC"), [
+              'embeds' => [
+                [
+                  "description" => "A banned user tried to submit a score. This play is automatically deleted. Beatmap: " . $bm->beatmap->artist . " - " . $bm->beatmap->title . "(" . $bm->beatmap->creator . ") [" . $bm->name . "]" . $mods_text . " in **osu!" . BeatmapController::gameModeToString($gameMode) . "** mode",
+                  "color" => 13632027,
+                  "footer" => [
+                      "text" => "katakuna!kodachi internal anti cheat"
+                  ],
+                  "author" => [
+                      "name" => $user->username . "[BANNED]",
+                      "url" => route("user", ["id" => $user->id]),
+                      "icon_url" => env("AVATAR_SERVER") . "/" . $user->id
+                  ],
+                  "image" => [
+                      "url" => "https://a.sayobot.cn/beatmaps/" . $bm->beatmap->id . "/covers/cover.jpg"
+                  ],
+                  "fields" => [
+                    [
+                      "name" => "x300",
+                      "value" => $play->count300,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "x100",
+                      "value" => $play->count100,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "x50",
+                      "value" => $play->count50,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "Geki",
+                      "value" => $play->countGeki,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "Katu",
+                      "value" => $play->countKatu,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "Score",
+                      "value" => $play->score,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "Misses",
+                      "value" => $play->miss,
+                      "inline" => true
+                    ],
+                    [
+                      "name" => "PP",
+                      "value" => $beatmap_ranking->ppAfter,
+                      "inline" => true
+                    ]
+                  ]
+                ]
+              ]
+          ]);
+        }
+        $play->delete();
+      }
+
+      // \Artisan::call('schedule:run');
+      $st = new \App\UserStats;
+
+      $st->user()->associate($user);
+      $st->gameMode = $gameMode;
+      $st->accuracy = $user->accuracy($gameMode);
+      $st->score = $user->totalScore($gameMode);
+      $st->pp = $user->pp($gameMode);
+      $st->rank = $user->currentRankingPosition($gameMode);
+      $st->play_count = $user->playCount($gameMode);
+
+      $st->save();
 
       return "beatmapId:" .
         $bm->beatmap->id .
         "|beatmapSetId:" .
         $bm->id .
         "|beatmapPlaycount:" .
-        count($user->played_scores()->where("beatmapset_id", "=", $bm->id)->get()) .
+        count($bm->plays) .
         "|beatmapPasscount:" .
-        count($user->played_scores()->where([["beatmapset_id", "=", $bm->id], ["pass", "=", "1"]])->get()) .
+        count($bm->plays()->where("pass", "=", "1")->get()) .
         "|approvedDate:" .
         ($bm->beatmap->created_at != NULL ? $bm->beatmap->created_at : "") .
         "\n\n" .
@@ -474,6 +631,8 @@ class BeatmapController extends Controller
                 $map_data["source"] = "";
                 $map_data["genreId"] = "1";
                 $map_data["id"] = BeatmapController::GetOsuBMMetadata($_beatmap->getFromIndex($i), "BeatmapSetID") ? BeatmapController::GetOsuBMMetadata($_beatmap->getFromIndex($i), "BeatmapSetID") : rand(); // addressing an issue when Set ID is not defined. Giving a random ID
+                $map_data["aim"] = $map_set->aim;
+                $map_data["speed"] = $map_set->speed;
               }
           }
       }

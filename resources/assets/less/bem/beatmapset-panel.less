@@ -1,0 +1,209 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.beatmapset-panel {
+  @top: beatmapset-panel;
+  @padding: 10px;
+  @hover-transition-duration: 150ms;
+  .own-layer();
+
+  &__content {
+    height: 75px;
+    padding: @padding;
+  }
+
+  &__count {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  &__count-number {
+    padding-right: 5px;
+  }
+
+  &__counts-box {
+    position: absolute;
+    right: @padding;
+    top: @padding;
+  }
+
+  &__difficulties {
+    position: absolute;
+    bottom: @padding;
+    left: @padding;
+    display: flex;
+    align-items: center;
+    font-size: @font-size--normal;
+  }
+
+  &__difficulty-icon {
+    margin-right: 5px;
+  }
+
+  &__difficulty-count {
+    margin-right: 10px;
+    margin-left: 3px;
+    font-weight: bold;
+  }
+
+  &__header {
+    display: block;
+    .link-white();
+    .link-plain();
+    .solid-text-shadow();
+
+    .at2x('/images/layout/beatmaps/default-bg.png');
+    background-position: center;
+    background-size: cover;
+
+    font-weight: 400;
+    height: 120px;
+
+    border-radius: @border-radius-base @border-radius-base 0 0;
+    overflow: hidden;
+  }
+
+  &__header-text {
+    font-weight: 600;
+    font-size: @font-size--title-small;
+
+    &--title {
+      font-size: 130%;
+    }
+  }
+
+  &__icon {
+    .link-white();
+    padding-left: 5px;
+
+    &--disabled {
+      color: #999;
+
+      .link-hover({
+        color: #999;
+      });
+    }
+  }
+
+  &__icons-box {
+    flex: none;
+  }
+
+  &__image {
+    .full-size();
+    object-fit: cover;
+  }
+
+  &__image-overlay {
+    .full-size();
+    background-color: fade(#000, 40%);
+  }
+
+  &__mapper-source-box {
+    font-size: 70%;
+    flex: 1;
+    // avoid extending beyond container on long line
+    min-width: 0;
+  }
+
+  &__panel {
+    .own-layer();
+    .default-box-shadow();
+    border-radius: @border-radius-base + 2px @border-radius-base + 2px @border-radius-base @border-radius-base;
+
+    width: 100%;
+    background: @osu-colour-b3;
+
+    .@{top}:hover & {
+      background: @osu-colour-b2;
+    }
+  }
+
+  &__play {
+    .link-white();
+    .link-plain();
+    .fade-element(@hover-transition-duration);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 40px;
+    opacity: 0;
+    line-height: 1;
+    padding: (@padding / 2) @padding @padding;
+
+    &:hover {
+      color: @yellow;
+    }
+
+    .@{top}:hover & {
+      opacity: 1;
+    }
+
+    .@{top}--previewing & {
+      color: @yellow;
+      opacity: 1;
+    }
+  }
+
+  &__preview-bar {
+    background-color: @yellow;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    transition-timing-function: linear;
+  }
+
+  &__row {
+    display: flex;
+  }
+
+  &__status-container {
+    display: flex;
+    position: absolute;
+    margin: 5px;
+
+    .fade-element(@hover-transition-duration);
+
+    .@{top}:hover & {
+      opacity: 0;
+    }
+
+    .@{top}--previewing & {
+      opacity: 0;
+    }
+  }
+
+  &__shadow {
+    .default-border-radius();
+    .own-layer();
+    .full-size();
+    .thicker-box-shadow();
+    .fade-element(@hover-transition-duration);
+
+    opacity: 0;
+    pointer-events: none;
+
+    .@{top}:hover & {
+      opacity: 1;
+    }
+  }
+
+  &__title-artist-box {
+    position: absolute;
+    left: @padding;
+    bottom: @padding;
+    width: calc(100% - (@padding * 2));
+  }
+
+  &__extra-icon {
+    font-size: 14px;
+    line-height: 28px;
+    background: osu-hsla(@osu-colour-b4, 70%);
+    padding: 0px 5px;
+    margin-right: 5px;
+    border-radius: 14px;
+  }
+}

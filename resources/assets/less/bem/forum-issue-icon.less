@@ -1,0 +1,38 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.forum-issue-icon {
+  .icon-bg();
+  .circle(20px);
+  .center-content();
+
+  font-size: 10px;
+  color: #fff;
+  text-shadow: 0 0 2px #000;
+
+  margin: 0 5px;
+
+  &--added {
+    background-color: @pink-dark;
+  }
+
+  &--assigned {
+    background-color: @purple-dark;
+  }
+
+  &--confirmed {
+    background-color: @blue-dark;
+  }
+
+  &--duplicate {
+    background-color: @yellow-dark;
+  }
+
+  &--invalid {
+    background-color: darken(@red, 20%);
+  }
+
+  &--resolved {
+    background-color: @green-dark;
+  }
+}

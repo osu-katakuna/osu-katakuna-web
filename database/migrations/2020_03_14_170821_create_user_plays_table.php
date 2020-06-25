@@ -34,8 +34,10 @@ class CreateUserPlaysTable extends Migration
             $table->text("replay_file")->nullable()->default(null);
             $table->timestamps();
 
-            $table->foreign("user_id")->references("id")->on("users");
+            $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
             $table->foreign("beatmapset_id")->references("id")->on("beatmap_sets");
+
+            $table->index(['user_id', 'beatmapset_id', 'gameMode']);
         });
     }
 

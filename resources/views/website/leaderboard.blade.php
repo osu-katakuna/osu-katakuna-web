@@ -5,7 +5,7 @@
 @section("content")
 <div class="jumbotron">
   <div class="card">
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <div class="container">
         <h1>leaderboard</h1>
         <div id="app">

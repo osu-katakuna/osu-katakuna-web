@@ -1,0 +1,19 @@
+{
+  "database": {
+    "host": "localhost",
+    "username": "katakuna",
+    "password": "078MTG4SlUSRIipslSQnV0FKZR9cSF0C",
+    "database": "katakuna"
+  },
+  "ports": {
+    "web": 8080,
+    "avatar": 8081,
+    "websocket": 8082
+  },
+  "certs": {
+    "key": "/katakuna/certs/key.pem",
+    "certificate": "/katakuna/certs/cacert.pem"
+  },
+  "ipc": true,
+  "websocket": true
+}

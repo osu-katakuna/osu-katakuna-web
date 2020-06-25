@@ -1,0 +1,92 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.news-card {
+  @_top: news-card;
+
+  .link-plain();
+  .link-white();
+  .default-border-radius();
+  display: block;
+  border-radius: @border-radius-large;
+  background-color: @osu-colour-b4;
+  min-width: 0;
+
+  &:hover {
+    background-color: @osu-colour-b3;
+  }
+
+  &--landing {
+    margin: 10px;
+    flex: 1;
+  }
+
+  &__cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__cover-container {
+    .at2x-simple('/images/headers/news-show-default.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: @border-radius-large;
+    overflow: hidden;
+    height: 160px;
+
+    .@{_top}--show & {
+      height: 200px;
+    }
+  }
+
+  &__main {
+    padding: 10px 15px;
+
+    .@{_top}--show & {
+      display: none;
+    }
+  }
+
+  &__time {
+    border-radius: 10000px;
+    font-size: @font-size--small;
+    padding: 5px 20px;
+    background-color: osu-hsla(@osu-colour-b6, 0.5);
+    align-self: flex-end;
+    text-transform: uppercase;
+    font-weight: 600;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+  }
+
+  &__row {
+    font-size: @font-size--normal;
+
+    &--author {
+      strong { font-weight: 600; }
+    }
+
+    &--preview {
+      .content-font();
+      color: inherit;
+
+      .@{_top}--landing & {
+        display: none;
+      }
+    }
+
+    &--title {
+      font-weight: 600;
+
+      .@{_top}--index & {
+        font-size: @font-size--large;
+      }
+
+      .@{_top}--landing & {
+        font-size: @font-size--title-small;
+      }
+    }
+  }
+}

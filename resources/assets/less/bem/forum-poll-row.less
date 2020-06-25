@@ -1,0 +1,31 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.forum-poll-row {
+  @_top: forum-poll-row;
+  margin: 3px 0; // vertical +2px from __row
+  display: flex;
+  flex-direction: column;
+
+  &__row {
+    margin: 2px 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__text {
+    flex: 1;
+  }
+
+  &__result {
+    flex: none;
+    min-width: 60px;
+    padding-right: 5px;
+
+    @media @desktop {
+      text-align: right;
+      padding-right: 0;
+      padding-left: 5px;
+    }
+  }
+}

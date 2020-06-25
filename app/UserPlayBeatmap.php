@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use OsuConsts;
+use App\OsuConsts;
 
 class UserPlayBeatmap extends Model
 {
@@ -19,6 +19,18 @@ class UserPlayBeatmap extends Model
     }
 
     // Source: https://github.com/ppy/osu-performance/blob/master/src/performance/osu/OsuScore.cpp
+
+    function totalHits() {
+      if($this->gameMode == 0 || $this->gameMode == 4) {
+        return $this->count300 + $this->count100 + $this->count50 + $this->miss;
+      } else if($this->gameMode == 1) {
+        return $this->miss + $this->count100 + $this->count300;
+      } else if($this->gameMode == 2) {
+        return $this->count300 + $this->count100 + $this->count50 + $this->miss + $this->countKatu;
+      } else if($this->gameMode == 3) {
+        return $this->miss + $this->count50 + $this->count100 + $this->count300 + $this->countGeki + $this->countKatu;
+      }
+    }
 
     function accuracy() {
       $accuracy = 0;
@@ -61,15 +73,125 @@ class UserPlayBeatmap extends Model
     }
 
     function aim() {
-      $raw_aim = isset($this->beatmap_set->aim) ? $this->beatmap_set->aim : 1; // se calculeaza dupa mapa FUCK
+      if(!isset($this->beatmap_set->aim)) return 0;
+
+      $rawAim = $this->beatmap_set->aim == 0 ? 1 : $this->beatmap_set->aim;
+
+      if (($this->mods & OsuConsts::TouchDevice) > 0) {
+    		$rawAim = pow($rawAim, 0.8);
+      }
+
+      $aimValue = pow(5.0 * max(1.0, $rawAim / 0.0675) - 4.0, 3.0) / 100000.0;
+
+      $totalHits = $this->totalHits();
+
+      // Longer maps are worth more
+      $lengthBonus = 0.95 + 0.4 * min(1.0, $totalHits / 2000.0) + ($totalHits > 2000 ? log10($totalHits / 2000.0) * 0.5 : 0.0);
+      $aimValue *= $lengthBonus;
+
+      // Penalize misses exponentially. This mainly fixes tag4 maps and the likes until a per-hitobject solution is available
+      $aimValue *= pow(0.97, $this->miss);
+
+      // Combo scaling
+      $maxCombo = $this->maxCombo; // all user max combo
+      $_maxCombo = $totalHits;
+
+      if ($maxCombo > 0) {
+        $aimValue *= min((pow($_maxCombo, 0.8) / pow($maxCombo, 0.8)), 1.0);
+      }
+
+      $approachRate = $this->beatmap_set->ar;
+    	$approachRateFactor = 1.0;
+    	if ($approachRate > 10.33) {
+    		$approachRateFactor += 0.3 * ($approachRate - 10.33);
+    	} else if ($approachRate < 8.0) {
+    		$approachRateFactor += 0.01 * (8.0 - $approachRate);
+    	}
+
+      $aimValue *= $approachRateFactor;
+
+      // We want to give more reward for lower AR when it comes to aim and HD. This nerfs high AR and buffs lower AR.
+      if (($this->mods & OsuConsts::Hidden) > 0) $aimValue *= 1.0 + 0.04 * (12.0 - $this->beatmap_set->ar);
+
+      if (($this->mods & OsuConsts::Flashlight) > 0) {
+		    $aimValue *= 1.0 + 0.35 * min(1.0, $totalHits / 200.0) +
+         		($totalHits > 200 ? 0.3 * min(1.0, $totalHits - 200 / 300.0) +
+         		($totalHits > 500 ? $totalHits - 500 / 1200.0 : 0.0) : 0.0);
+      }
+
+      // Scale the aim value with accuracy _slightly_
+    	$aimValue *= 0.5 + $this->accuracy() / 2.0;
+    	// It is important to also consider accuracy difficulty when doing that
+    	$aimValue *= 0.98 + (pow($this->beatmap_set->od, 2) / 2500);
+
+      return $aimValue;
     }
 
     function speed() {
-      $raw_speed = isset($this->beatmap_set->speed) ? $this->beatmap_set->speed : 1; // se calculeaza dupa mapa FUCCKCKCKCKCK
+      if(!isset($this->beatmap_set->speed)) return 0;
+
+      $raw_speed = $this->beatmap_set->speed == 0 ? 1 : $this->beatmap_set->speed;
+
+      $speedValue = pow(5.0 * max(1.0, $raw_speed / 0.0675) - 4.0, 3.0) / 100000.0;
+
+      $totalHits = $this->totalHits();
+
+    	$approachRate = $this->beatmap_set->ar;
+    	$approachRateFactor = 1.0;
+    	if ($approachRate > 10.33) $approachRateFactor += 0.3 * ($approachRate - 10.33);
+
+    	$speedValue *= $approachRateFactor;
+
+      // Longer maps are worth more
+    	$speedValue *= 0.95 + 0.4 * min(1.0, $totalHits / 2000.0) + ($totalHits > 2000 ? log10($totalHits / 2000.0) * 0.5 : 0.0);
+
+      // Penalize misses exponentially. This mainly fixes tag4 maps and the likes until a per-hitobject solution is available
+    	$speedValue *= pow(0.97, $this->miss);
+
+      // Combo scaling
+      $maxCombo = $this->maxCombo;
+    	$_maxCombo = $totalHits;
+
+    	if ($maxCombo > 0) $speedValue *= min(pow($_maxCombo, 0.8) / pow($maxCombo, 0.8), 1.0);
+
+      // We want to give more reward for lower AR when it comes to speed and HD. This nerfs high AR and buffs lower AR.
+    	if (($this->mods & OsuConsts::Hidden) > 0) $speedValue *= 1.0 + 0.04 * (12.0 - $approachRate);
+
+      // Scale the speed value with accuracy _slightly_
+    	$speedValue *= 0.02 + $this->accuracy();
+    	// It is important to also consider accuracy difficulty when doing that
+    	$speedValue *= 0.96 + (pow($this->beatmap_set->od, 2) / 1600);
+
+      return $speedValue;
     }
 
     function acc() {
-      $raw_accuracy = $this->accuracy(); // se calculeaza dupa mapa FUCKCKCKK
+      if(!isset($this->beatmap_set->aim) || !isset($this->beatmap_set->speed)) return 0;
+
+      $raw_accuracy = $this->accuracy();
+      $totalHits = $this->totalHits();
+
+      // SCORE v1 CODE!!
+
+      $numHitObjectsWithAccuracy = $totalHits;
+  		if ($numHitObjectsWithAccuracy > 0) $betterAccuracyPercentage = ($this->count300 - ($totalHits - $numHitObjectsWithAccuracy) * 6 + $this->count100 * 2 + $this->count50) / ($numHitObjectsWithAccuracy * 6);
+  		else $betterAccuracyPercentage = 0;
+
+  		// It is possible to reach a negative accuracy with this formula. Cap it at zero - zero points
+  		if ($betterAccuracyPercentage < 0) $betterAccuracyPercentage = 0;
+
+      // Lots of arbitrary values from testing.
+    	// Considering to use derivation from perfect accuracy in a probabilistic manner - assume normal distribution
+    	$accValue = pow(1.52163, $this->beatmap_set->od) * pow($betterAccuracyPercentage, 24) * 2.83;
+
+      // Bonus for many hitcircles - it's harder to keep good accuracy up for longer
+	    $accValue *= min(1.15, pow($numHitObjectsWithAccuracy / 1000.0, 0.3));
+
+      if (($this->mods & OsuConsts::Hidden) > 0) $accValue *= 1.08;
+
+    	if (($this->mods & OsuConsts::Flashlight) > 0) $accValue *= 1.02;
+
+      return $accValue;
     }
 
     function pp() {
@@ -83,10 +205,12 @@ class UserPlayBeatmap extends Model
       if (($this->mods & OsuConsts::NoFail) > 0) $multiplier *= 0.90;
     	if (($this->mods & OsuConsts::SpunOut) > 0) $multiplier *= 0.95;
 
-      return pow(
+      $rawPP = pow(
         pow($this->aim(), 1.1) +
         pow($this->speed(), 1.1) +
         pow($this->acc(), 1.1)
         , 1.0 / 1.1) * $multiplier;
+
+      return ceil(round($rawPP, 2));
     }
 }

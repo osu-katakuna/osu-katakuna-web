@@ -1,0 +1,39 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.admin-menu-item {
+  @_top: admin-menu-item;
+
+  .reset-input();
+  .link-plain();
+  .link-white();
+  display: block;
+  margin-top: 10px;
+
+  &__content {
+    display: flex;
+    align-items: center;
+  }
+
+  &__label {
+    flex: none;
+    background-color: #333;
+
+    .@{_top}:hover & {
+      background-color: @blue-darker;
+    }
+
+    &--icon {
+      .circle(@admin-menu-icon-width);
+      .center-content();
+      margin-right: 10px;
+      font-size: 24px; // icon size
+    }
+
+    &--text {
+      .default-border-radius();
+      padding: 5px 10px;
+      font-size: @font-size--title-small;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.chat {
+  font-size: @font-size--title-small;
+  width: 100%;
+
+  @media @mobile {
+    flex-direction: column;
+  }
+
+  &__conversation-area {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto; // without this, firefox scroll breaks
+  }
+
+  &__instructions {
+    margin-top: 10px;
+  }
+
+  &__not-active {
+    padding: 20px;
+    .full-size();
+    .center-content();
+    flex-direction: column;
+    min-height: 250px;
+    color: @osu-colour-l1;
+  }
+
+  &__sidebar {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    color: white;
+    .default-text-shadow();
+    font-size: 26px;
+    font-weight: 300;
+  }
+}

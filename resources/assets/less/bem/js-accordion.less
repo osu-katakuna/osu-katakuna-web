@@ -1,0 +1,19 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.js-accordion {
+  display: flex;
+  flex-direction: column;
+  // turn gpu acceleration on in Safari for slideup/down.
+  // Firefox animates faster without forcing 3d translate.
+  // Chrome doesn't care
+  // Applying translateZ(0) onto &__item will cause too many layers in Safari.
+  transform: translateZ(0);
+  -moz-transform: none;
+  -webkit-font-smoothing: antialiased; // fixes font flickering in Safari while animating
+
+  &__item-body {
+    overflow: hidden;
+    transition: height 0.3s ease-in-out;
+  }
+}

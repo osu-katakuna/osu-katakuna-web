@@ -1,0 +1,17 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.forum-topic-floating-header {
+  font-style: normal;
+  font-size: @font-size--title-small-2;
+  color: #fff;
+  flex: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1.2; // prevent cut off from u-ellipsis-overflow
+
+  &__title-link {
+    .link-white();
+    .link-plain();
+  }
+}

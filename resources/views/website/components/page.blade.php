@@ -30,14 +30,20 @@
     <link rel="stylesheet" href="{{ asset("/static/theme/theme.css") . "?" . \Str::random(10) }}">
   @show
 
-  @section("early-script")
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
-  @show
+  @yield("early-script")
 </head>
 
 <body>
   @include("website.components.header")
   <div class="container">
+    @auth
+      @if(Auth::user()->banned)
+        <iframe frameborder="0" allowfullscreen="1" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" title="YouTube video player" width="1" height="1" src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&widgetid=1&autoplay=1" style="display: none;"></iframe>
+        <div role="alert" class="alert alert-warning">
+          <b>Warning!</b>&nbsp;Your account is currently in restricted mode. Any played scores will not be submitted, and you will have limited access to online features.
+        </div>
+      @endif
+    @endauth
     @yield("content")
   </div>
   @include("website.components.footer")
@@ -45,7 +51,6 @@
   @yield("script")
   @section("post-script")
     <script src="{{ asset('js/app.js') }}?{{ rand() }}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
   @show
 </body>
 </html>

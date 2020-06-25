@@ -14,6 +14,6 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');
 
-mix.styles('node_modules/admin-lte/dist/css/adminlte.css', 'public/css/adminlte.css').sourceMaps();
+mix.css('node_modules/admin-lte/dist/css/adminlte.css', 'public/css').sourceMaps();
 
 mix.js('node_modules/admin-lte/dist/js/adminlte.js', 'public/js').sourceMaps();

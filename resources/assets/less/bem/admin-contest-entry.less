@@ -1,0 +1,46 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.admin-contest-entry {
+  &__deleted {
+    opacity: 0.25;
+  }
+
+  &__thumbnail {
+    max-height: 400px;
+  }
+
+  &__user-column {
+    width: 250px;
+    padding-left: 10px;
+  }
+
+  &__avatar {
+    display: inline-block;
+    width: 32px;
+    margin-right: 5px;
+  }
+
+  &__preview {
+    padding: 20px;
+  }
+
+  &__user-link {
+    display: flex;
+    align-items: center;
+  }
+
+  &__username {
+    margin-bottom: 10px;
+  }
+
+  &__column {
+    && { // bootstrap override
+      vertical-align: middle;
+    }
+
+    &--button {
+      text-align: center;
+    }
+  }
+}

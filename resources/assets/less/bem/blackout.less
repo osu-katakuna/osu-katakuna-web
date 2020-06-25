@@ -1,0 +1,16 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.blackout {
+  .full-size();
+  position: fixed;
+  z-index: @z-index--blackout;
+  backface-visibility: hidden;
+  background-color: #000;
+  opacity: 0.75;
+
+  &--overlay {
+    z-index: @z-index--overlay;
+    opacity: 0.4;
+  }
+}

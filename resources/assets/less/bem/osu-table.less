@@ -1,0 +1,88 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.osu-table {
+  @_top: osu-table;
+  @passive-row: ~'@{_top}__body-row--highlightable';
+
+  @handle: 16px;
+  @row-height: 1.8em;
+
+  overflow-x: auto;
+  color: @osu-colour-f1;
+
+  &--with-handle {
+    margin-right: -@handle;
+  }
+
+  &__table {
+    width: 100%;
+    min-width: 800px;
+    font-size: 12px;
+  }
+
+  &__header {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding-bottom: 5px;
+  }
+
+  &__body-row {
+    height: @row-height;
+
+    .@{_top}--taller-rows & {
+      height: 3em;
+    }
+
+    // @passive-row
+    &--highlightable {
+      .@{_top}--menu-active & {
+        pointer-events: none;
+      }
+    }
+  }
+
+  &__cell {
+    &:first-child {
+      // rounded corners for left side
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+
+    .@{_top}--with-handle & {
+      &:nth-last-child(2) {
+        // ...and right side
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+    }
+
+    :not(.@{_top}--with-handle) & {
+      &:last-child {
+        // ...and right side
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+    }
+
+    // when row is not selected
+    .@{passive-row} & {
+      background-color: @osu-colour-b5;
+    }
+
+    .@{passive-row}:nth-child(odd) & {
+      background-color: @osu-colour-b4;
+    }
+
+    // hovering over an unselected row
+    .@{passive-row}:hover & {
+      color: #fff;
+      background-color: @osu-colour-b3;
+    }
+
+    .@{passive-row}:hover:nth-child(odd) & {
+      background-color: @osu-colour-b3;
+    }
+  }
+}

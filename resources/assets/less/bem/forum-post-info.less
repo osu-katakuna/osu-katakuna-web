@@ -1,0 +1,86 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.forum-post-info {
+  flex: none;
+  background-color: @osu-colour-b5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  text-align: center;
+  width: 45px;
+
+  @media @desktop {
+    width: 180px;
+    padding: 10px;
+  }
+
+  &__row {
+    margin: 5px 0;
+    display: none;
+
+    @media @desktop {
+      display: block;
+    }
+
+    &--avatar {
+      width: 100%;
+      display: block;
+
+      @media @desktop {
+        padding: 0 40px;
+      }
+    }
+
+    &--flag {
+      width: 100%;
+      display: block;
+    }
+
+    &--group-badge {
+      width: 100%;
+      display: block;
+    }
+
+    &--posts {
+      font-size: @font-size--normal;
+    }
+
+    &--registration {
+      font-size: @font-size--normal;
+
+      strong  {
+        font-weight: 600;
+      }
+    }
+
+    &--support-level {
+      .center-content();
+      background-color: @osu-colour-pink-1;
+      font-size: 6px; // icon size
+      padding: 2px 5px;
+      border-radius: 10000px;
+      width: 100%;
+
+      @media @desktop {
+        font-size: 8px; // icon size
+        min-width: 50px;
+        width: auto;
+      }
+    }
+
+    &--title {
+      font-size: @font-size--small-2;
+    }
+
+    &--username {
+      font-size: @font-size--title-small-3;
+      color: @osu-colour-c1;
+
+      .link-hover({
+        color: @osu-colour-c1;
+      });
+    }
+  }
+}

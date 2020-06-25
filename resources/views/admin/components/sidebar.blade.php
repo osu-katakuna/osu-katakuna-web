@@ -21,12 +21,13 @@
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
       @HasPermission("admin.dashboard")
       <li class="nav-item">
-        <a href="{{ route("admin") }}" class="nav-link">
+        <a href="{{ route("admin") }}" class="nav-link @if(Route::is('admin')) active @endif">
           <i class="nav-icon fas fa-tachometer-alt"></i>
           <p>Dashboard</p>
         </a>
       </li>
       @endHasPermission
+
       @HasPermission("admin.beatmap.manage")
       <li class="nav-item has-treeview @if(Route::is('beatmaps.*')) menu-open @endif">
         <a href="#" class="nav-link @if(Route::is('beatmaps.*')) active @endif">
@@ -56,6 +57,15 @@
           </li>
         </ul>
         @endHasPermission
+      </li>
+      @endHasPermission
+
+      @HasPermission("admin.users.manage")
+      <li class="nav-item">
+        <a href="{{ route("users.manage") }}" class="nav-link @if(Route::is('users.manage')) active @endif">
+          <i class="nav-icon fas fa-users"></i>
+          <p>Users</p>
+        </a>
       </li>
       @endHasPermission
     </ul>

@@ -1,0 +1,77 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the GNU Affero General Public License v3.0.
+// See the LICENCE file in the repository root for full licence text.
+
+.search-header {
+  @_top: search-header;
+  @_search-icon-width: 40px;
+
+  .default-gutter-v2();
+  color: @osu-colour-c1;
+  background-color: @osu-colour-b4;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  &__box {
+    position: relative;
+    width: 100%;
+  }
+
+  &__icon {
+    .reset-input();
+    .center-content();
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: @_search-icon-width;
+    font-size: @font-size--title-small-2;
+
+    *:-webkit-autofill ~ & {
+      color: #000;
+    }
+
+    &--normal {
+      .@{_top}.js-search--searching & {
+        display: none;
+      }
+    }
+
+    &--searching {
+      display: none;
+
+      .@{_top}.js-search--searching & {
+        display: inline-flex;
+      }
+    }
+  }
+
+  &__input {
+    .reset-input();
+    width: 100%;
+    font-size: @font-size--phone-input;
+    padding: 20px 10px 20px @_search-icon-width;
+    font-weight: normal;
+    min-width: 0;
+    .default-border-radius();
+    background-color: osu-hsla(@osu-colour-b6, 0.5);
+    display: flex;
+
+    &::placeholder {
+      color: @osu-colour-f1;
+    }
+
+    @media @desktop {
+      font-size: inherit;
+    }
+  }
+
+  &__title {
+    font-weight: 300;
+    align-self: center;
+    margin-bottom: 10px;
+    font-size: @font-size--large-2;
+    text-align: center;
+  }
+}
