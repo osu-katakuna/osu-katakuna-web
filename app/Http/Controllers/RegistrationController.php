@@ -43,6 +43,11 @@ class RegistrationController extends Controller
 
         # get country of new user
         $c = (object) json_decode(file_get_contents("http://ip-api.com/json/" . $req->ip()), true);
+        if($c->status == "fail") {
+          return redirect('/register')
+                      ->withErrors("An unknown server error has occured while registering your account.")
+                      ->withInput();
+        }
         $new_user->country = $c->countryCode;
 
         $new_user->save();
@@ -111,6 +116,16 @@ class RegistrationController extends Controller
 
       # get country of new user
       $c = (object) json_decode(file_get_contents("http://ip-api.com/json/" . $req->ip()), true);
+      if($c->status == "fail") {
+        $message = "An unknown server error has occured while registering your account.";
+
+        $errors = array();
+        $errors["form_error"] = array();
+        $errors["form_error"]["user"] = array();
+        $errors["form_error"]["user"]["username"] = array($message);
+
+        return response()->json($errors, 422);
+      }
       $new_user->country = $c->countryCode;
 
       $new_user->save();
