@@ -51,6 +51,20 @@ class RegistrationController extends Controller
         $new_user->country = $c->countryCode;
 
         $new_user->save();
+
+        for($gameMode = 0; $gameMode < 5; $gameMode++) {
+          $st = new \App\UserStats;
+
+          $st->user()->associate($new_user);
+          $st->gameMode = $gameMode;
+          $st->accuracy = $new_user->accuracy($gameMode);
+          $st->score = $new_user->totalScore($gameMode);
+          $st->pp = $new_user->pp($gameMode);
+          $st->rank = $new_user->currentRankingPosition($gameMode);
+          $st->play_count = $new_user->playCount($gameMode);
+
+          $st->save();
+        }
       }
 
       return view("website.register", ["message" => $message]);
@@ -129,6 +143,20 @@ class RegistrationController extends Controller
       $new_user->country = $c->countryCode;
 
       $new_user->save();
+
+      for($gameMode = 0; $gameMode < 5; $gameMode++) {
+        $st = new \App\UserStats;
+
+        $st->user()->associate($new_user);
+        $st->gameMode = $gameMode;
+        $st->accuracy = $new_user->accuracy($gameMode);
+        $st->score = $new_user->totalScore($gameMode);
+        $st->pp = $new_user->pp($gameMode);
+        $st->rank = $new_user->currentRankingPosition($gameMode);
+        $st->play_count = $new_user->playCount($gameMode);
+
+        $st->save();
+      }
 
       return "ok";
     }
