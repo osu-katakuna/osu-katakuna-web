@@ -48,7 +48,7 @@ class UpdateUsersScores implements ShouldQueue
     public function handle()
     {
         foreach($this->players as $player) {
-          for($gamemode = 0; $gamemode < 4; $gamemode++) {
+          for($gamemode = 0; $gamemode < 5; $gamemode++) {
             if(!$player->currentStats($gamemode)) {
               $this->updateScore($player, $gamemode);
               continue;
